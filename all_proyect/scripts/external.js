@@ -63,7 +63,7 @@ function detener() {
 function showNav(flag) {
     if(flag) {
         let email = document.getElementById("email").value;
-        show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><table width="100%"><tr><td><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + email + '&nbsp; &nbsp;<img src="images/kirby_logo.png" height="30" widht="15"></a><div class="dropdown-menu" aria-labelledby="navbarDropdown2"><a class="dropdown-item" href="#" onclick="showNav(false);">Cerrar sesión</a></div></li></td><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalShop"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li></td></tr></table></li></ul>';
+        show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><table width="100%"><tr><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalProduct"><i class="fa fa-upload" aria-hidden="true"></i> Agregar producto</a></li></td><td><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + email + '&nbsp; &nbsp;<img src="images/kirby_logo.png" height="30" widht="15"></a><div class="dropdown-menu" aria-labelledby="navbarDropdown2"><a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalFoto">Cambiar foto de perfil</a><a class="dropdown-item" href="#" onclick="showNav(false);">Cerrar sesión</a></div></li></td><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalShop"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li></td></tr></table></li></ul>';
     }
     else {
         show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#modalAccount"><i class="fa fa-user-circle"></i> Registrarse</a></li><li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#modalLogin"><i class="fa fa-sign-in"></i> Iniciar Sesión</a></li></ul>';
@@ -72,14 +72,25 @@ function showNav(flag) {
 
 function showContent() {
     element = document.getElementById("m_categories");
+    el_marca = document.getElementById("m_marcas");
+    el_bazar = document.getElementById("m_bazar");
     user = document.getElementById("user_count");
     bazar = document.getElementById("bazar_count");
     marca = document.getElementById("marca_count");
 
-    if(user.checked && !bazar.checked && !marca.cheked) {
+    if(user.checked) {
         element.style.display='block';
+        el_marca.style.display='none';
+        el_bazar.style.display='none';
     }
-    else {
+    else if(marca.checked) {
         element.style.display='none';
+        el_marca.style.display="block";
+        el_bazar.style.display='none';
+    }
+    else if(bazar.checked) {
+        element.style.display='none';
+        el_marca.style.display="none";
+        el_bazar.style.display='block';
     }
 }

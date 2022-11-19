@@ -1,0 +1,21 @@
+POST http://localhost:3000/api/users HTTP/1.1 
+content-type: application/json
+
+{
+    "nombre": "Jesus",
+    "apellido": "Miramontes",
+    "correo": "jesus.miramontes@iteso.mx",
+    "password": "Caguama123",
+    "fecha": "03/18/2002",
+    "categorias": ["hogar", "ropa", "arte"],
+    "tipo": "user"
+}
+
+# GET http://localhost:3000/api/users/ana.vazquez@iteso.mx
+
+# DELETE http://localhost:3000/api/users HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "id": "6369174169c9b9409eaf91ab"
+# }
