@@ -1,17 +1,68 @@
-POST http://localhost:3000/api/users HTTP/1.1 
-content-type: application/json
+// Post user normal
+# POST http://localhost:3000/api/users HTTP/1.1 
+# content-type: application/json
 
-{
-    "nombre": "Jesus",
-    "apellido": "Miramontes",
-    "correo": "jesus.miramontes@iteso.mx",
-    "password": "Caguama123",
-    "fecha": "03/18/2002",
-    "categorias": ["hogar", "ropa", "arte"],
-    "tipo": "user"
-}
+# {
+#     "nombre": "Jesus",
+#     "apellido": "Miramontes",
+#     "correo": "jesus.miramontes@iteso.mx",
+#     "password": "Caguama123",
+#     "fecha": "03/18/2002",
+#     "categorias": ["hogar", "ropa", "arte"],
+#     "tipo": "user"
+# }
 
+// Post marca
+# POST http://localhost:3000/api/users HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "nombre": "Boca",
+#     "apellido": "Dragon",
+#     "correo": "boca.dragon@brand.mx",
+#     "password": "bocgon3000",
+#     "fecha": "07/19/2015",
+#     "tipo": "marca",
+#     "marca": "BOCA DRAGÓN",
+#     "logo": "images/logo_r2.jpg",
+#     "categoria": "ropa",
+#     "url": "https://www.instagram.com/bocadragon_/?hl=es"
+# }
+
+// Post bazar
+# POST http://localhost:3000/api/users HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "nombre": "Bazar",
+#     "apellido": "La Barca",
+#     "correo": "bazar.la.barca@bazar.mx",
+#     "password": "barzar45",
+#     "fecha": "09/24/2021",
+#     "tipo": "bazar",
+#     "bazar": "Bazar la barca",
+#     "logo": "images/logo_b1.jpg",
+#     "url": "https://www.instagram.com/bazar_labarca/"
+# }
+
+// Post producto
+# POST http://localhost:3000/api/products/boca.dragon@brand.mx HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "nombre": "Traje Vintage color Rosa",
+#     "precio": 900,
+#     "categoria": "ropa",
+#     "stock": 15,
+#     "descripcion": "All pinked-out, head-to-toe in Boca Dragon vintage heirlooms. Silk Chinese jacket, 80’s button-up, and 80’s balloon pants POW 💕💕",
+#     "imagen": "images/r2_p1.jpg"
+# }
+
+// get usuario por correo
 # GET http://localhost:3000/api/users/ana.vazquez@iteso.mx
+
+//get todos los productos
+GET http://localhost:3000/api/products
 
 # DELETE http://localhost:3000/api/users HTTP/1.1 
 # content-type: application/json
