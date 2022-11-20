@@ -3,6 +3,8 @@ import express from 'express';
 import chalk from 'chalk';
 import * as fs from 'node:fs';
 import cors from 'cors';
+import bcrypt from 'bcrypt';
+import randomatic from 'randomatic';
 
 const app = express();
 const port = 3000;
@@ -218,6 +220,7 @@ app.post('/api/users', (req, res) => {
                 res.send(message);
             }
             else {
+                let hash = bcrypt.hashSync(req.body.password, 10);
                 message = "Hace falta los siguientes parametros: ";
 
                 if(req.body.tipo == 'user') {
@@ -233,7 +236,7 @@ app.post('/api/users', (req, res) => {
                         res.send(message);
                     }
                     else {
-                        let newUser = {nombre: req.body.nombre, apellido: req.body.apellido, correo: req.body.correo, password: req.body.password, fecha: req.body.fecha, categorias: req.body.categorias, tipo: req.body.tipo};
+                        let newUser = {nombre: req.body.nombre, apellido: req.body.apellido, correo: req.body.correo, password: hash, fecha: req.body.fecha, categorias: req.body.categorias, tipo: req.body.tipo};
                         let user = User(newUser);
                         user.save().then((doc) => console.log(chalk.green("Usuario creado: ") + doc));
                         res.sendStatus(201);
@@ -285,7 +288,7 @@ app.post('/api/users', (req, res) => {
                         res.send(message);
                     }
                     else {
-                        let newUser = {nombre: req.body.nombre, apellido: req.body.apellido, correo: req.body.correo, password: req.body.password, fecha: req.body.fecha, tipo: req.body.tipo, marca: req.body.marca, logo: req.body.logo, categoria: req.body.categoria, url: req.body.url};
+                        let newUser = {nombre: req.body.nombre, apellido: req.body.apellido, correo: req.body.correo, password: hash, fecha: req.body.fecha, tipo: req.body.tipo, marca: req.body.marca, logo: req.body.logo, categoria: req.body.categoria, url: req.body.url};
                         let user = Brand(newUser);
                         user.save().then((doc) => console.log(chalk.green("Usuario creado: ") + doc));
                         res.sendStatus(201);
@@ -326,7 +329,7 @@ app.post('/api/users', (req, res) => {
                         res.send(message);
                     }
                     else {
-                        let newUser = {nombre: req.body.nombre, apellido: req.body.apellido, correo: req.body.correo, password: req.body.password, fecha: req.body.fecha, tipo: req.body.tipo, bazar: req.body.bazar, logo: req.body.logo, url: req.body.url};
+                        let newUser = {nombre: req.body.nombre, apellido: req.body.apellido, correo: req.body.correo, password: hash, fecha: req.body.fecha, tipo: req.body.tipo, bazar: req.body.bazar, logo: req.body.logo, url: req.body.url};
                         let user = Bazaar(newUser);
                         user.save().then((doc) => console.log(chalk.green("Usuario creado: ") + doc));
                         res.sendStatus(201);
@@ -452,21 +455,185 @@ app.post('/api/products/:email', (req, res) => {
     });
 });
 
-app.get('/api/users/:email', (req, res) => {
-    let email = req.params.email;
+app.get('/api/user/:token-:id-:tipo', (req, res) => {
+    let id = req.params.id;
+    let tipo = req.params.tipo;
+    let token = req.params.token;
+
+    if(token.length != 10) {
+        res.status(400);
+        res.send("Consulta incorrecta.");
+    }
+    else {
+        if(tipo == 'user') {
+            User.find({
+            }, function (err, docs) {
+                let temp;
+                for(let i = 0 ; i < docs.length ; i++){
+                    if(docs[i].id == id) {
+                        temp = docs[i];
+                    }
+                }
+        
+                if(temp == undefined) {
+                    res.status(400);
+                    res.send("No se encontro el usuario.");
+                }
+                else{
+                    res.status(200);
+                    res.send(temp);
+                }
+            });
+        }
+        else if(tipo == 'marca') {
+            Brand.find({
+            }, function (err, docs) {
+                let temp;
+                for(let i = 0 ; i < docs.length ; i++){
+                    if(docs[i].id == id) {
+                        temp = docs[i];
+                    }
+                }
+        
+                if(temp == undefined) {
+                    res.status(400);
+                    res.send("No se encontro el usuario marca.");
+                }
+                else{
+                    res.status(200);
+                    res.send(temp);
+                }
+            });
+        }
+        else if(tipo == 'bazar') {
+            Bazaar.find({
+            }, function (err, docs) {
+                let temp;
+                for(let i = 0 ; i < docs.length ; i++){
+                    if(docs[i].id == id) {
+                        temp = docs[i];
+                    }
+                }
+        
+                if(temp == undefined) {
+                    res.status(400);
+                    res.send("No se encontro el usuario bazar.");
+                }
+                else{
+                    res.status(200);
+                    res.send(temp);
+                }
+            });
+        }
+        else {
+            res.status(400);
+            res.send("No se encontro la categoria."); 
+        }
+    }
+});
+
+app.get('/api/products', (req, res) => {
+    let marca = req.body.marca;
+    let categoria = req.body.categoria;
     
-    User.find({
-        correo: {$regex: email}
+    Product.find({
+        marca: {$regex: marca},
+        categoria: {$regex: categoria}
     }, function (err, docs) {
         res.send(docs);
     });
 });
 
-app.get('/api/products', (req, res) => {
-    Product.find({        
-    }, function (err, docs) {
-        res.send(docs);
-    });
+app.get('/api/login', (req, res) => {
+    let falta = 'Hacen falta los siguientes parámetros:';
+    let mis = false;
+
+    if(req.body.correo == undefined) {
+        falta += ' correo';
+        mis = true;
+    }
+
+    if(req.body.password == undefined) {
+        if(mis) {
+            falta += ', password';
+        }
+        else {
+            falta += ' pasword';
+            mis = true;
+        }
+    }
+
+    falta += '.';
+
+    if(mis) {
+        res.status(400);
+        res.send(falta);
+    }
+    else {
+        User.find({
+            correo: {$regex: req.body.correo}
+        }, function (err, docs) {
+            let usuarios = docs;
+
+            if(usuarios.length > 0) {
+                if(bcrypt.compareSync(req.body.password, usuarios[0].password)){
+                    let token = randomatic('Aa0', '10') + "-" + usuarios[0].id + "-" + usuarios[0].tipo;
+                    res.status(201);
+                    res.send(token); 
+                }
+                else {
+                    res.status(401);
+                    res.send("No se encontro un usuario con ese correo y contraseña");
+                }
+            }
+            else {
+                Brand.find({
+                    correo: {$regex: req.body.correo}
+                }, function (err, docs) {
+                    let usuarios = docs;
+        
+                    if(usuarios.length > 0) {
+                        if(bcrypt.compareSync(req.body.password, usuarios[0].password)){
+                            let token = randomatic('Aa0', '10') + "-" + usuarios[0].id + "-" + usuarios[0].tipo;
+                            res.status(201);
+                            res.send(token); 
+                        }
+                        else {
+                            res.status(401);
+                            res.send("No se encontro un usuario con ese correo y contraseña");
+                        }
+                    }
+                    else {
+                        Bazaar.find({
+                            correo: {$regex: req.body.correo}
+                        }, function (err, docs) {
+                            let usuarios = docs;
+                
+                            if(usuarios.length > 0) {
+                                if(bcrypt.compareSync(req.body.password, usuarios[0].password)){
+                                    let token = randomatic('Aa0', '10') + "-" + usuarios[0].id + "-" + usuarios[0].tipo;
+                                    res.status(201);
+                                    res.send(token); 
+                                }
+                                else {
+                                    res.status(401);
+                                    res.send("No se encontro un usuario con ese correo y contraseña");
+                                }
+                            }
+                            else {
+                                res.status(401);
+                                res.send("No se encontro un usuario con ese correo y contraseña");
+                            }
+                
+                            
+                        });
+                    }
+                    
+                });
+            }
+
+        });
+    }
 });
 
 // actualización de usuario pendiente

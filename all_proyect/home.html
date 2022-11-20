@@ -123,26 +123,26 @@
               <h4 class="modal-title">Registrar usuario</h4>
               <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-          <form  @submit.prevent onsubmit="" class="was-validated">
+          <form  @submit.prevent onsubmit="readRegister();" class="was-validated">
             <!-- Modal body -->
             <div class="modal-body" id="sign2">
               <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Nombre(s)" required minlength="2">
+                  <input id="account_nombre" type="text" class="form-control" placeholder="Nombre(s)" required minlength="2">
               </div>
               <div class="form-group">
-              <input type="text" class="form-control" placeholder="Apellidos" required minlength="2">
+              <input id="account_apellido" type="text" class="form-control" placeholder="Apellidos" required minlength="2">
               </div>
               <div class="form-group">
-                  <input type="email" class="form-control" name="" id="" aria-describedby="emailHelpId" placeholder="Correo electrónico"required minlength="2">
+                  <input id="account_correo" type="email" class="form-control" name="" id="" aria-describedby="emailHelpId" placeholder="Correo electrónico"required minlength="2">
               </div>
               <div class="form-group">
-                <input type="password" class="form-control" name="" id="" placeholder="Contraseña" required minlength="6" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]*$">
+                <input id="account_password_1" type="password" class="form-control" name="" id="" placeholder="Contraseña" required minlength="6" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]*$">
               </div>
               <div class="form-group">
-                <input type="password" class="form-control" name="" id="" placeholder="Confirmar contraseña" required minlength="6" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]*$">
+                <input id="account_password_2" type="password" class="form-control" name="" id="" placeholder="Confirmar contraseña" required minlength="6" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]*$">
               </div>
               <div class="form-group">
-                <input type="date" class="form-control" name="" id="" value="2000-01-01" required max="2022-09-11">
+                <input id="account_fecha" type="date" class="form-control" name="" id="" value="2000-01-01" required max="2022-09-11">
               </div>
               <br>
               <div class="form-group">
@@ -169,19 +169,19 @@
 
               <div id="m_marcas" style="display: none;">
                 <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Nombre de la marca" required minlength="2">
+                  <input id="account_marca" type="text" class="form-control" placeholder="Nombre de la marca" minlength="2">
                 </div>
                 <div class="form-group">
                   <br>
                   <h5>Logo:</h5>
-                  <input type="file" id="archive" accept=".png,.jpg">
+                  <input id="account_logo_m" type="file" id="archive" accept=".png,.jpg">
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control" placeholder="URL red social más usada" required minlength="2">
+                  <input id="account_insta" type="text" class="form-control" placeholder="URL red social más usada" minlength="2">
                 </div>
                 <div class="form-group">
                   <label class="text-muted" for="doc_type">Categoría de la marca:</label>               
-                  <select class="form-control pl-0" id="doc_type" name="selectFormat">
+                  <select class="form-control pl-0" id="account_c_m" name="selectFormat">
                       <option value="1">Hogar</option>
                       <option value="2">Belleza y cuidado</option>
                       <option value="3">Calzado</option>
@@ -198,15 +198,15 @@
 
               <div id="m_bazar" style="display: none;">
                 <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Nombre del bazar" required minlength="2">
+                  <input id="account_bazar" type="text" class="form-control" placeholder="Nombre del bazar" minlength="2">
                 </div>
                 <div class="form-group">
                   <br>
                   <h5>Logo:</h5>
-                  <input type="file" id="archive" accept=".png,.jpg">
+                  <input id="account_logo_b" type="file" id="archive" accept=".png,.jpg">
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control" placeholder="URL red social más usada" required minlength="2">
+                  <input id="account_url_b" type="text" class="form-control" placeholder="URL red social más usada" minlength="2">
                 </div>
               </div>
 

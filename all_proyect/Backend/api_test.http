@@ -3,11 +3,11 @@
 # content-type: application/json
 
 # {
-#     "nombre": "Jesus",
-#     "apellido": "Miramontes",
-#     "correo": "jesus.miramontes@iteso.mx",
-#     "password": "Caguama123",
-#     "fecha": "03/18/2002",
+#     "nombre": "José Pablo",
+#     "apellido": "Vázquez",
+#     "correo": "jose.vazquez@iteso.mx",
+#     "password": "Hola123",
+#     "fecha": "05/18/2002",
 #     "categorias": ["hogar", "ropa", "arte"],
 #     "tipo": "user"
 # }
@@ -59,10 +59,55 @@
 # }
 
 // get usuario por correo
-# GET http://localhost:3000/api/users/ana.vazquez@iteso.mx
+# GET http://localhost:3000/api/users/jose.vazquez@iteso.mx
 
 //get todos los productos
-GET http://localhost:3000/api/products
+# GET http://localhost:3000/api/products
+
+// get token user
+# GET http://localhost:3000/api/login HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "correo": "jose.vazquez@iteso.mx",
+#     "password": "Hola123"
+# }
+
+// get token brand
+# GET http://localhost:3000/api/login HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "correo": "boca.dragon@brand.mx",
+#     "password": "bocgon3000"
+# }
+
+// get token bazaar
+# GET http://localhost:3000/api/login HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "correo": "bazar.la.barca@bazar.mx",
+#     "password": "barzar45"
+# }
+
+// get producto marca categoria
+# GET http://localhost:3000/api/products HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "marca": "BOCA DRAGÓN",
+#     "categoria": "ropa"
+# }
+
+// get user id
+# GET http://localhost:3000/api/user/qwertyuiop-637a5abde3f6f33d7a14317f-user
+
+// get marca id
+# GET http://localhost:3000/api/user/qwertyuiop-637a5de5e7da54eb665cf563-marca
+
+// get bazar id
+# GET http://localhost:3000/api/user/qwertyuiop-637a5dffe7da54eb665cf566-bazar
 
 # DELETE http://localhost:3000/api/users HTTP/1.1 
 # content-type: application/json
