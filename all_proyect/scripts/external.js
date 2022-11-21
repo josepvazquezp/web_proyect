@@ -7,15 +7,16 @@ let url_login = "http://localhost:3000/api/login";
 
 function loadLogin(urlJSON, user) {
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', urlJSON);
-    xhr.send(user);
+    xhr.open('POST', urlJSON);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify(user));
     xhr.onload = function () {
-        if (xhr.status != 200) { 
-            alert("Hubo un error intenta más tarde.");
+        if (xhr.status != 201) { 
+            alert("Correo o password incorrecto.");
         } else {
-            let datos = JSON.parse(xhr.response); 
-            // cbOk(datos);
-            console.log(datos); 
+            localStorage.setItem("token", xhr.responseText); 
+            alert("Sesion inicada correctamente.");
+            showNav();
         }
     };
 }
@@ -172,14 +173,48 @@ function detener() {
     navigator.geolocation.clearWatch(watchId);
 }
 
-function showNav(flag) {
-    if(flag) {
-        let email = document.getElementById("email").value;
-        show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><table width="100%"><tr><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalProduct"><i class="fa fa-upload" aria-hidden="true"></i> Agregar producto</a></li></td><td><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + email + '&nbsp; &nbsp;<img src="images/kirby_logo.png" height="30" widht="15"></a><div class="dropdown-menu" aria-labelledby="navbarDropdown2"><a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalFoto">Cambiar foto de perfil</a><a class="dropdown-item" href="#" onclick="showNav(false);">Cerrar sesión</a></div></li></td><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalShop"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li></td></tr></table></li></ul>';
+function showNav() {
+    let token = localStorage.getItem("token");
+
+    if(token == undefined) {
+        show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#modalAccount"><i class="fa fa-user-circle"></i> Registrarse</a></li><li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#modalLogin"><i class="fa fa-sign-in"></i> Iniciar Sesión</a></li></ul>';   
+        setTimeout(function() {
+            alert("Se ha cerrado tu sesion.");
+        }, 2000);
     }
     else {
-        show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#modalAccount"><i class="fa fa-user-circle"></i> Registrarse</a></li><li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#modalLogin"><i class="fa fa-sign-in"></i> Iniciar Sesión</a></li></ul>';
+        let url_temp = "http://localhost:3000/api/user/" + token;
+        console.log(url_temp);
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url_temp);
+        xhr.send();
+        xhr.onload = function () {
+            if (xhr.status != 200) { 
+                alert("Hubo un error intenta más tarde.");
+            } 
+            else {
+                let user = JSON.parse(xhr.responseText);
+                console.log(user);
+
+                if(user.tipo == 'marca') {
+                    show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><table width="100%"><tr><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalProduct"><i class="fa fa-upload" aria-hidden="true"></i> Agregar producto</a></li></td><td><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.marca + '&nbsp; &nbsp;<img class="rounded-circle" src="' + user.logo + '" height="30" widht="15"></a><div class="dropdown-menu" aria-labelledby="navbarDropdown2"><a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalFoto">Cambiar foto de perfil</a><a class="dropdown-item" href="#" onclick="logOut();">Cerrar sesión</a></div></li></td><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalShop"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li></td></tr></table></li></ul>';
+                }
+                else if(user.tipo == 'bazar') {
+                    show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><table width="100%"><tr><td><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.bazar + '&nbsp; &nbsp;<img class="rounded-circle" src="' + user.logo + '" height="30" widht="15"></a><div class="dropdown-menu" aria-labelledby="navbarDropdown2"><a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalFoto">Cambiar foto de perfil</a><a class="dropdown-item" href="#" onclick="logOut();">Cerrar sesión</a></div></li></td><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalShop"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li></td></tr></table></li></ul>'; 
+                }
+                else if(user.tipo == 'user') {
+                    user.image = user.image == null? "images/kirby_logo.png" : user.image;
+                    show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><table width="100%"><tr><td><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.correo + '&nbsp; &nbsp;<img class="rounded-circle" src="' + user.image + '" height="30" widht="15"></a><div class="dropdown-menu" aria-labelledby="navbarDropdown2"><a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalFoto">Cambiar foto de perfil</a><a class="dropdown-item" href="#" onclick="logOut();">Cerrar sesión</a></div></li></td><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalShop"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li></td></tr></table></li></ul>';
+                }
+            }
+        };
     }
+    
+}
+
+function logOut() {
+    localStorage.clear();
+    showNav();
 }
 
 function showContent() {

@@ -544,7 +544,7 @@ app.get('/api/products', (req, res) => {
     });
 });
 
-app.get('/api/login', (req, res) => {
+app.post('/api/login', (req, res) => {
     let falta = 'Hacen falta los siguientes parámetros:';
     let mis = false;
 

@@ -69,8 +69,8 @@
 # content-type: application/json
 
 # {
-    # "correo": "jose.vazquez@iteso.mx",
-    # "password": "Hola123"
+#     "correo": "jose.vazquez@iteso.mx",
+#     "password": "Hola123"
 # }
 
 // get token brand
