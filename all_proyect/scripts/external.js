@@ -5,6 +5,8 @@ var mapaMarcador = null;
 let url = "http://localhost:3000/api/users";
 let url_login = "http://localhost:3000/api/login";
 
+let flag_user = false;
+
 function loadLogin(urlJSON, user) {
     let xhr = new XMLHttpRequest();
     xhr.open('POST', urlJSON);
@@ -72,18 +74,9 @@ function guardarEnJSON(user, url) {
 //     };
 // }
 
-// window.onload = function () {
-//     var path = window.location.pathname;
-//     var page = path.split("/").pop();
-
-//     if(page == 'login.html') {
-//         localStorage.clear();
-//     }
-//     else if(localStorage.token != undefined) {
-//         loadLoginUser(localStorage.temp, cbOk, cbErr);
-//         alert("Se inicio sesión correctamente.");
-//     }
-// }
+window.onload = function () {
+    showNav();
+}
 
 // function putJSON(user, url) {
 //     let xhr = new XMLHttpRequest();
@@ -178,9 +171,14 @@ function showNav() {
 
     if(token == undefined) {
         show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#modalAccount"><i class="fa fa-user-circle"></i> Registrarse</a></li><li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#modalLogin"><i class="fa fa-sign-in"></i> Iniciar Sesión</a></li></ul>';   
-        setTimeout(function() {
-            alert("Se ha cerrado tu sesion.");
-        }, 2000);
+        
+        if(flag_user) {
+            flag_user = false;
+
+            setTimeout(function() {
+                alert("Se ha cerrado tu sesion.");
+            }, 2000);
+        }
     }
     else {
         let url_temp = "http://localhost:3000/api/user/" + token;
@@ -194,7 +192,7 @@ function showNav() {
             } 
             else {
                 let user = JSON.parse(xhr.responseText);
-                console.log(user);
+                flag_user = true;
 
                 if(user.tipo == 'marca') {
                     show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><table width="100%"><tr><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalProduct"><i class="fa fa-upload" aria-hidden="true"></i> Agregar producto</a></li></td><td><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.marca + '&nbsp; &nbsp;<img class="rounded-circle" src="' + user.logo + '" height="30" widht="15"></a><div class="dropdown-menu" aria-labelledby="navbarDropdown2"><a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalFoto">Cambiar foto de perfil</a><a class="dropdown-item" href="#" onclick="logOut();">Cerrar sesión</a></div></li></td><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalShop"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li></td></tr></table></li></ul>';

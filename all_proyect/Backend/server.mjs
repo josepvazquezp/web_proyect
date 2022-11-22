@@ -140,10 +140,34 @@ let productsSchema = mongoose.Schema({
     marca: {type: String,
             required: true},
     logo: {type: String,
-           required: true}
+           required: true},
+    dudas: {type: Array,
+            required: false},
+    reseñas: {type: Array,
+              required: false}
 });
 
 let Product = mongoose.model('products', productsSchema);
+
+let doubtsSchema = mongoose.Schema({
+    usuario_token: {type: String,
+                    required: true},
+    duda: {type: String,
+            required: true},
+    respuesta: {type: Array,
+                required: false}
+});
+
+let Doubt = mongoose.model('doubts', doubtsSchema);
+
+let reviewsSchema = mongoose.Schema({
+    usuario_token: {type: String,
+                    required: true},
+    estrellas: {type: Number,
+                 required: true}
+});
+
+let Review = mongoose.model('reviews', reviewsSchema);
 
 app.post('/api/users', (req, res) => {
     User.find({
