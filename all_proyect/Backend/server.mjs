@@ -164,7 +164,9 @@ let reviewsSchema = mongoose.Schema({
     usuario_token: {type: String,
                     required: true},
     estrellas: {type: Number,
-                 required: true}
+                 required: true},
+    reseña: {type: String,
+             required: false}
 });
 
 let Review = mongoose.model('reviews', reviewsSchema);
@@ -669,6 +671,14 @@ app.post('/api/doubts', (req, res) => {
         res.sendStatus(400);
     }
     else {
+        let id_token;
+
+        for(let i = 11 ; complete_token[i] != '-' ; i++) {
+            id_token = i;
+        }
+
+        id_token = complete_token.substring(11, id_token + 1);
+
         Product.find({
             imagen: {$regex: imagen}
         }, function (err, docs) {
@@ -679,7 +689,7 @@ app.post('/api/doubts', (req, res) => {
                 res.send("Usuario invalido para agregar producto.");
             }
             else {
-                let newDoubt = {usuario_token: complete_token, duda: texto_duda};
+                let newDoubt = {usuario_token: id_token, duda: texto_duda};
                 let doubt = Doubt(newDoubt);
                 doubt.save().then((doc) => {
                     console.log(chalk.green("Duda creada: ") + doc);
@@ -707,6 +717,411 @@ app.post('/api/doubts', (req, res) => {
             }
         });
     } 
+});
+
+app.post('/api/reviews', (req, res) => {
+    let complete_token = req.body.usuario_token;
+    let estrellas = req.body.estrellas;
+    let imagen = req.body.imagen;
+    let reseña = req.body.reseña;
+    
+    if(complete_token == undefined || estrellas == undefined || imagen == undefined || reseña == undefined) {
+        res.sendStatus(400);
+    }
+    else {
+        let id_token;
+
+        for(let i = 11 ; complete_token[i] != '-' ; i++) {
+            id_token = i;
+        }
+
+        id_token = complete_token.substring(11, id_token + 1);
+
+        Product.find({
+            imagen: {$regex: imagen}
+        }, function (err, docs) {
+            let temp = docs[0];
+
+            if(temp == undefined) {
+                res.status(400);
+                res.send("Usuario invalido para agregar producto.");
+            }
+            else {
+                let newReview = {usuario_token: id_token, estrellas: estrellas, reseña: reseña};
+                let review = Review(newReview);
+                review.save().then((doc) => {
+                    console.log(chalk.green("Reseña creada: ") + doc);
+                
+                    if(temp.reseñas == undefined) {
+                        temp.reseñas = [];
+                    } 
+
+                    temp.reseñas.push(doc.id);
+                    console.log(temp);
+
+                    Product.findByIdAndUpdate(temp.id, temp, {new: true}, (err, doc) => {
+                        if(err) {
+                            console.log("Error: " + err);
+                            res.send(err);
+                        }
+                        else {
+                            console.log(chalk.green("Producto actualizado:"));
+                            console.log(doc);
+                            res.status(201);
+                            res.send(doc);
+                        }
+                    });
+                });
+            }
+        });
+    } 
+});
+
+app.post('/api/carrito', (req, res) => {
+    let complete_token = req.body.usuario_token;
+    let imagen = req.body.imagen;
+    
+    if(complete_token == undefined || imagen == undefined) {
+        res.sendStatus(400);
+    }
+    else {
+        let id_token, index;
+
+        for(let i = 11 ; complete_token[i] != '-' ; i++) {
+            index = i;
+        }
+
+        id_token = complete_token.substring(11, index + 1);
+        let tipo = complete_token.substring(index + 2, complete_token.length);
+
+        Product.find({
+            imagen: {$regex: imagen}
+        }, function (err, docs) {
+            let temp = docs[0];
+
+            if(temp == undefined || temp.stock == 0) {
+                res.status(400);
+                res.send("Usuario invalido para agregar a carrito.");
+            }
+            else {
+                if(tipo == 'user') {
+                    User.findById(id_token, (err, docs) => {
+                        if(err) {
+                            console.log("Error: " + err);
+                            res.send(err);
+                        }
+                        else {
+                            let user = docs;
+    
+                            temp.stock -= 1;
+                            
+                            Product.findByIdAndUpdate(temp.id, temp, {new: true}, (err, doc) => {
+                                if(err) {
+                                    console.log("Error: " + err);
+                                    res.send(err);
+                                }
+                                else {
+                                    console.log(chalk.green("Producto actualizado:"));
+                                    console.log(doc);
+                                    if(user.carrito == undefined) {
+                                        user.carrito = [];
+                                    } 
+            
+                                    user.carrito.push(temp.id);
+            
+                                    if(user.tipo == 'user') {
+                                        User.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
+                                            if(err) {
+                                                console.log("Error: " + err);
+                                                res.send(err);
+                                            }
+                                            else {
+                                                console.log(chalk.green("Usuario actualizado:"));
+                                                console.log(doc);
+                                                res.status(200);
+                                                res.send(doc);
+                                            }
+                                        });
+                                    }
+                                    else {
+                                        res.sendStatus(400);
+                                    }     
+                                }
+                            });
+                        }
+                    });
+                }
+                else if(tipo == 'marca') {
+                    Brand.findById(id_token, (err, docs) => {
+                        if(err) {
+                            console.log("Error: " + err);
+                            res.send(err);
+                        }
+                        else {
+                            let user = docs;
+    
+                            temp.stock -= 1;
+                            
+                            Product.findByIdAndUpdate(temp.id, temp, {new: true}, (err, doc) => {
+                                if(err) {
+                                    console.log("Error: " + err);
+                                    res.send(err);
+                                }
+                                else {
+                                    console.log(chalk.green("Producto actualizado:"));
+                                    console.log(doc);
+                                    if(user.carrito == undefined) {
+                                        user.carrito = [];
+                                    } 
+            
+                                    user.carrito.push(temp.id);
+            
+                                    if(user.tipo == 'marca') {
+                                        Brand.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
+                                            if(err) {
+                                                console.log("Error: " + err);
+                                                res.send(err);
+                                            }
+                                            else {
+                                                console.log(chalk.green("Marca actualizada:"));
+                                                console.log(doc);
+                                                res.status(200);
+                                                res.send(doc);
+                                            }
+                                        });
+                                    }
+                                    else {
+                                        res.sendStatus(400);
+                                    }     
+                                }
+                            });
+                        }
+                    });
+                }
+                else if(tipo == 'bazar') {
+                    Bazaar.findById(id_token, (err, docs) => {
+                        if(err) {
+                            console.log("Error: " + err);
+                            res.send(err);
+                        }
+                        else {
+                            let user = docs;
+    
+                            temp.stock -= 1;
+                            
+                            Product.findByIdAndUpdate(temp.id, temp, {new: true}, (err, doc) => {
+                                if(err) {
+                                    console.log("Error: " + err);
+                                    res.send(err);
+                                }
+                                else {
+                                    console.log(chalk.green("Producto actualizado:"));
+                                    console.log(doc);
+                                    if(user.carrito == undefined) {
+                                        user.carrito = [];
+                                    } 
+            
+                                    user.carrito.push(temp.id);
+            
+                                    if(user.tipo == 'bazar') {
+                                        Bazaar.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
+                                            if(err) {
+                                                console.log("Error: " + err);
+                                                res.send(err);
+                                            }
+                                            else {
+                                                console.log(chalk.green("Bazar actualizado:"));
+                                                console.log(doc);
+                                                res.status(200);
+                                                res.send(doc);
+                                            }
+                                        });
+                                    }
+                                    else {
+                                        res.sendStatus(400);
+                                    }     
+                                }
+                            });
+                        }
+                    });
+                } 
+                else {
+                    res.sendStatus(400);
+                }
+            }
+        });
+    } 
+});
+
+app.post('/api/apartar', (req, res) => {
+    let complete_token = req.body.usuario_token;
+    let imagen = req.body.imagen;
+    
+    if(complete_token == undefined || imagen == undefined) {
+        res.sendStatus(400);
+    }
+    else {
+        let id_token;
+
+        for(let i = 11 ; complete_token[i] != '-' ; i++) {
+            id_token = i;
+        }
+
+        id_token = complete_token.substring(11, id_token + 1);
+
+        Product.find({
+            imagen: {$regex: imagen}
+        }, function (err, docs) {
+            let temp = docs[0];
+
+            if(temp == undefined || temp.stock == 0) {
+                res.status(400);
+                res.send("Usuario invalido para agregar a carrito.");
+            }
+            else {
+                Brand.find({
+                    marca: {$regex: temp.marca}
+                }, function (err, docs) {
+                    let marca = docs[0];
+
+                    temp.stock -= 1;
+
+                    if(marca.apartado == undefined) {
+                        marca.apartado = [];
+                    } 
+
+                    marca.apartado.push({"producto": temp.id, "usuario": id_token});
+                    console.log(marca);
+
+                    Brand.findByIdAndUpdate(marca.id, marca, {new: true}, (err, doc) => {
+                        if(err) {
+                            console.log("Error: " + err);
+                            res.send(err);
+                        }
+                        else {
+                            console.log(chalk.green("Marca actualizada:"));
+                            console.log(doc);
+
+                            Product.findByIdAndUpdate(temp.id, temp, {new: true}, (err, doc) => {
+                                if(err) {
+                                    console.log("Error: " + err);
+                                    res.send(err);
+                                }
+                                else {
+                                    console.log(chalk.green("Producto actualizado:"));
+                                    console.log(doc);
+                                    res.status(200);
+                                    res.send(doc);
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+        });
+    } 
+});
+
+app.put('/api/comprar', (req, res) => {
+    let complete_token = req.body.usuario_token;
+
+    if(complete_token == undefined) {
+        res.sendStatus(400);
+    }
+    else {
+        let id_token, index;
+
+        for(let i = 11 ; complete_token[i] != '-' ; i++) {
+            index = i;
+        }
+
+        id_token = complete_token.substring(11, index + 1);
+
+        let tipo = complete_token.substring(index + 2, complete_token.length);
+        console.log(tipo);
+
+        if(tipo == 'user') {
+            User.findById(id_token, (err, docs) => {
+                if(err) {
+                    console.log("Error: " + err);
+                    res.send(err);
+                }
+                else {
+                    let user = docs;
+    
+                    user.carrito = [];
+
+                    User.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
+                        if(err) {
+                            console.log("Error: " + err);
+                            res.send(err);
+                        }
+                        else {
+                            console.log(chalk.green("Carrito actualizado:"));
+                            console.log(doc);
+                            res.status(200);
+                            res.send(doc);
+                        }
+                    });
+                }
+            });
+        }
+        else if(tipo == 'marca') {
+            Brand.findById(id_token, (err, docs) => {
+                if(err) {
+                    console.log("Error: " + err);
+                    res.send(err);
+                }
+                else {
+                    let user = docs;
+    
+                    user.carrito = [];
+
+                    Brand.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
+                        if(err) {
+                            console.log("Error: " + err);
+                            res.send(err);
+                        }
+                        else {
+                            console.log(chalk.green("Carrito actualizado:"));
+                            console.log(doc);
+                            res.status(200);
+                            res.send(doc);
+                        }
+                    });
+                }
+            });
+        }
+        else if(tipo == 'bazar') {
+            Bazaar.findById(id_token, (err, docs) => {
+                if(err) {
+                    console.log("Error: " + err);
+                    res.send(err);
+                }
+                else {
+                    let user = docs;
+    
+                    user.carrito = [];
+
+                    Bazaar.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
+                        if(err) {
+                            console.log("Error: " + err);
+                            res.send(err);
+                        }
+                        else {
+                            console.log(chalk.green("Carrito actualizado:"));
+                            console.log(doc);
+                            res.status(200);
+                            res.send(doc);
+                        }
+                    });
+                }
+            });
+        }
+        else {
+            ServerResponse.sendStatus(400);
+        }
+    }
 });
 
 // actualización de usuario pendiente

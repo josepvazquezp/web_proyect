@@ -68,6 +68,78 @@
 #     "imagen": "images/r2_p1.jpg"
 # }
 
+// Post reviews
+# POST http://localhost:3000/api/reviews HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "usuario_token": "qwertyuiop-637a5abde3f6f33d7a14317f-user",
+#     "reseña": "El producto me llegó en tiempo y completo.",
+#     "imagen": "images/r2_p1.jpg",
+#     "estrellas": 3
+# }
+
+// Post carrito
+# POST http://localhost:3000/api/carrito HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "usuario_token": "qwertyuiop-637a5abde3f6f33d7a14317f-user",
+#     "imagen": "images/r2_p1.jpg"
+# }
+
+// Post carrito marca
+# POST http://localhost:3000/api/carrito HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "usuario_token": "qwertyuiop-637a5de5e7da54eb665cf563-marca",
+#     "imagen": "images/r2_p1.jpg"
+# }
+
+// Post carrito bazar
+# POST http://localhost:3000/api/carrito HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "usuario_token": "qwertyuiop-637a5dffe7da54eb665cf566-bazar",
+#     "imagen": "images/r2_p1.jpg"
+# }
+
+// Post apartar
+# POST http://localhost:3000/api/apartar HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "usuario_token": "qwertyuiop-637a5abde3f6f33d7a14317f-user",
+#     "imagen": "images/r2_p1.jpg"
+# }
+
+// Put comprar user
+# PUT http://localhost:3000/api/comprar HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "usuario_token": "qwertyuiop-637a5abde3f6f33d7a14317f-user"
+# }
+
+// Put comprar marca
+# PUT http://localhost:3000/api/comprar HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "usuario_token": "qwertyuiop-637a5de5e7da54eb665cf563-marca"
+# }
+
+// Put comprar bazar
+# PUT http://localhost:3000/api/comprar HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "usuario_token": "qwertyuiop-637a5dffe7da54eb665cf566-bazar"
+# }
+
+
 // get usuario por correo
 # GET http://localhost:3000/api/users/jose.vazquez@iteso.mx
 
