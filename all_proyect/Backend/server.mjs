@@ -660,6 +660,55 @@ app.post('/api/login', (req, res) => {
     }
 });
 
+app.post('/api/doubts', (req, res) => {
+    let complete_token = req.body.usuario_token;
+    let texto_duda = req.body.duda;
+    let imagen = req.body.imagen;
+    
+    if(complete_token == undefined || texto_duda == undefined || imagen == undefined) {
+        res.sendStatus(400);
+    }
+    else {
+        Product.find({
+            imagen: {$regex: imagen}
+        }, function (err, docs) {
+            let temp = docs[0];
+
+            if(temp == undefined) {
+                res.status(400);
+                res.send("Usuario invalido para agregar producto.");
+            }
+            else {
+                let newDoubt = {usuario_token: complete_token, duda: texto_duda};
+                let doubt = Doubt(newDoubt);
+                doubt.save().then((doc) => {
+                    console.log(chalk.green("Duda creada: ") + doc);
+                
+                    if(temp.dudas == undefined) {
+                        temp.dudas = [];
+                    } 
+
+                    temp.dudas.push(doc.id);
+                    console.log(temp);
+
+                    Product.findByIdAndUpdate(temp.id, temp, {new: true}, (err, doc) => {
+                        if(err) {
+                            console.log("Error: " + err);
+                            res.send(err);
+                        }
+                        else {
+                            console.log(chalk.green("Producto actualizado:"));
+                            console.log(doc);
+                            res.status(201);
+                            res.send(doc);
+                        }
+                    });
+                });
+            }
+        });
+    } 
+});
+
 // actualización de usuario pendiente
 app.put('/api/users', (req, res) => {
     console.log(chalk.blue("Actualizando información..."));

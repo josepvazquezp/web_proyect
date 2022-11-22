@@ -58,6 +58,16 @@
 #     "imagen": "images/r2_p1.jpg"
 # }
 
+// Post duda
+# POST http://localhost:3000/api/doubts HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "usuario_token": "qwertyuiop-637a5abde3f6f33d7a14317f-user",
+#     "duda": "Tienes en negro?",
+#     "imagen": "images/r2_p1.jpg"
+# }
+
 // get usuario por correo
 # GET http://localhost:3000/api/users/jose.vazquez@iteso.mx
 
