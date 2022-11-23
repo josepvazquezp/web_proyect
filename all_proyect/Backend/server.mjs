@@ -1048,6 +1048,14 @@ app.put('/api/comprar', (req, res) => {
                 }
                 else {
                     let user = docs;
+
+                    if(user.historial == undefined) {
+                        user.historial = [];
+                    }
+
+                    for(let i = 0 ; i < user.carrito.length ; i++) {
+                        user.historial.push(user.carrito[i]);
+                    }
     
                     user.carrito = [];
 
@@ -1075,6 +1083,14 @@ app.put('/api/comprar', (req, res) => {
                 else {
                     let user = docs;
     
+                    if(user.historial == undefined) {
+                        user.historial = [];
+                    }
+
+                    for(let i = 0 ; i < user.carrito.length ; i++) {
+                        user.historial.push(user.carrito[i]);
+                    }
+    
                     user.carrito = [];
 
                     Brand.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
@@ -1100,6 +1116,14 @@ app.put('/api/comprar', (req, res) => {
                 }
                 else {
                     let user = docs;
+    
+                    if(user.historial == undefined) {
+                        user.historial = [];
+                    }
+
+                    for(let i = 0 ; i < user.carrito.length ; i++) {
+                        user.historial.push(user.carrito[i]);
+                    }
     
                     user.carrito = [];
 
