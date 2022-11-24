@@ -3,12 +3,13 @@ var app = express();
 var http = require("http").createServer(app);
 var formidable = require("formidable");
 var fs = require("fs");
- 
-app.set("view engine", "ejs");
+
+app.set("view engine", "ejs")
+app.use(express.static("views"));
  
 http.listen(4000, function () {
     app.get("/", function (request, result) {
-        result.render("index");
+        result.render("home");
     });
 
     app.post("/upload", function (request, result) {
@@ -20,5 +21,9 @@ http.listen(4000, function () {
                 result.send("File saved = " + newPath);
             });
         });
+    });
+
+    app.get("/info_empresa", function (request, result) {
+        result.render("info_empresa");
     });
 });

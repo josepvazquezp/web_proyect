@@ -1,0 +1,197 @@
+:root {
+   --dark_blue_per: rgb(17, 37, 48);
+   --light_blue_per: rgb(47, 79, 90);
+   --carnita_per: rgb(196, 163, 132);
+   --light_per: rgb(236, 233, 228);
+   --orange_b_per: rgb(181, 111, 59);
+}
+
+body {
+    background-color: var(--light_per);
+}
+
+.navbar {
+    background-color: var(--carnita_per);
+}
+
+.nav-link {
+    color: var(--dark_blue_per);
+    font-size: large;
+}
+
+.btn-primary {
+    background-color: var(--dark_blue_per);
+}
+
+#cat {
+    color: var(--light_blue_per);
+}
+
+h5 {
+    font-family: FrankRuehl;
+    font-weight: bold;
+    color: var(--orange_b_per);
+}
+
+.modal-content {
+    background-color: var(--light_per);
+}
+
+label.font-weight-bold {
+    color: var(--orange_b_per);
+}
+
+.modal-title {
+    color: var(--light_blue_per)
+}
+
+article {
+    position: relative;
+    overflow: hidden;
+    padding: 20px;
+    background: rgba(0,0,0,0.7);
+    margin: 50px auto;
+    width: 70%;
+    border: 2px solid #FFA800;
+    border-radius: 10px;
+    box-shadow: 0 0 4px #FFA800;
+    color: #FFA800;
+    text-align: center;
+}
+
+#mapa {
+    height: 400px;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+h6 {
+    font-size: small;
+}
+
+@font-face {
+    font-family: 'nectarine_canva';
+    src: url('fonts/nectarine_canva.ttf') format('truetype');
+    font-style: normal;
+    font-weight: normal;
+  }
+
+.empresa_name {
+    font-family: 'nectarine_canva';
+    font-weight: bold;
+}
+
+
+@font-face {
+    font-family: 'shirokuma';
+    src: url('fonts/shirokuma.ttf') format('truetype');
+    font-style: normal;
+    font-weight: normal;
+  }
+
+.font_art {
+    font-family: 'shirokuma';
+    font-size: xx-large;
+}
+
+#info_color {
+    background-color: var(--carnita_per);
+    color: var(--light_per); 
+}
+
+#no_bold {
+    font-weight: normal;
+}
+
+.font_cafecito {
+    color: var(--carnita_per);
+}
+
+.canvas {
+    display: table;
+    width: 300px;
+    height: 300px;
+    font-size: xx-large;
+    text-align: center;
+}
+
+.media {
+    width: 300px;
+    height: 300px;
+    margin-left: 4px;
+    margin-right: 4px;
+    border-radius: 10px;
+}
+
+#canv_1 {
+    background-color: var(--light_per);
+    color: var(--light_blue_per);
+}
+
+.c_info {
+    display: table-cell;
+    vertical-align: middle;
+    font-family: 'nectarine_canva';
+}
+
+.fondo_tabla {
+    background-color: white;
+}
+
+#canv_2 {
+    background-color: var(--light_blue_per);
+    color: var(--light_per);
+}
+
+#canv_3 {
+    background-color: var(--light_per);
+    color: var(--orange_b_per);
+}
+
+#canv_4 {
+    background-color: var(--carnita_per);
+    color: var(--light_per);
+}
+
+#canv_5 {
+    background-color: var(--light_per);
+    color: var(--orange_b_per);
+}
+
+#canv_6 {
+    background-color: var(--orange_b_per);
+    color: var(--light_per);
+}
+
+#foro {
+    color: var(--light_blue_per);
+}
+
+.checked {
+    color: var(--orange_b_per);
+}
+
+.stars {
+    color: grey;
+}
+
+input[class = "r_star"] { 
+    display:none;
+}
+
+.clasificacion {
+    direction: rtl;/* right to left */
+    unicode-bidi: bidi-override;/* bidi de bidireccional */
+}
+
+.stars:hover {
+    color: var(--orange_b_per);
+}
+
+.stars:hover ~.stars {
+    color: var(--orange_b_per);
+}
+
+input[class = "r_star"]:checked  ~.stars { 
+    color: var(--orange_b_per);
+}
