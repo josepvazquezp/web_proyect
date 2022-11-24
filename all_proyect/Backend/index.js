@@ -15,8 +15,8 @@ http.listen(4000, function () {
     app.post("/upload", function (request, result) {
         var formData = new formidable.IncomingForm();
         formData.parse(request, function (error, fields, files) {
-            var extension = files.file.originalFilename.substr(files.file.originalFilename.lastIndexOf("."));
-            var newPath = "uploads/" + fields.fileName + extension;
+            console.log(files);
+            var newPath = "views/uploads/" + files.file.newFilename + ".jpg";
             fs.rename(files.file.filepath, newPath, function (errorRename) {
                 result.send("File saved = " + newPath);
             });
