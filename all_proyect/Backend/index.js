@@ -26,4 +26,26 @@ http.listen(4000, function () {
     app.get("/info_empresa", function (request, result) {
         result.render("info_empresa");
     });
+
+    app.get("/home", function (request, result) {
+        result.render("home");
+    });
+
+    app.get("/marcas", function (request, result) {
+        result.render("marcas");
+    });
+
+    app.get("/p_bazares", function (request, result) {
+        result.render("p_bazares");
+    });
+
+
+    app.get("/producto", function (request, result) {
+        result.render("producto");
+    });
+
+    app.get("/productos_marca", function (request, result) {
+        result.render("productos_marca");
+    });
+
 });
