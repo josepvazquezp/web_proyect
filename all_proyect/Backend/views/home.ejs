@@ -288,7 +288,7 @@
             </div>
             
             <div class="modal-footer" id="login3">
-              <button type="submit" class="btn btn-success" valign="left" data-toggle="modal" data-target="#modalFoto">Registrarse</button>
+              <button type="submit" class="btn btn-success" valign="left">Registrarse</button>
               </form>
               <button type="button" class="btn btn-dark" data-dismiss="modal">Cerrar</button>
             </div>
@@ -401,13 +401,19 @@
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <br>
+
                 <center>
                   <table width="80%">
                     <tr>
                       <td>
                         <hr clas="my-2"></hr>
                           <h5>Inserta una imagen:</h5>
-                          <input type="file" id="archive" accept=".png,.jpg">
+                          <form method="POST" action="/upload" enctype="multipart/form-data">
+                            <input type="file" id="archive" name="file" accept=".png,.jpg">
+                            <br>
+                            <br>
+                            <button type="submit" class="btn btn-primary" onclick="readFoto();">Actualizar</button>
+                          </form>
                         <hr clas="my-2"></hr>
                       </td>
                     </tr>
@@ -419,7 +425,6 @@
       
                 <!-- Modal body -->
                 <div class="modal-footer" id="login3">
-                  <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="alert('Imagen actualizada.');">Actualizar</button>
                   <button type="button" class="btn btn-dark" data-dismiss="modal">Cerrar</button>
                 </div>  
               </div>

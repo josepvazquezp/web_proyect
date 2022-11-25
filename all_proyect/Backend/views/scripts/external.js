@@ -28,6 +28,9 @@ function guardarEnJSON(user, url) {
     xhr.open('POST', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(user));
+    localStorage.setItem("register", true);
+    localStorage.setItem("correo", user.correo);
+    localStorage.setItem("password", user.password);
     xhr.onload = function () {
         if (xhr.status != 201) { 
             console.log("No se pudo generar el archivo.");
@@ -76,6 +79,19 @@ function guardarEnJSON(user, url) {
 
 window.onload = function () {
     showNav();
+
+    if(localStorage.getItem("register") != undefined) {
+        localStorage.removeItem("register");
+
+        let temp = {"correo": localStorage.getItem("correo"), "password": localStorage.getItem("password")};
+        console.log(temp);
+        loadLogin(url_login, temp);
+
+        localStorage.removeItem("correo");
+        localStorage.removeItem("password");
+        
+        $("#modalFoto").modal();
+    }
 }
 
 // function putJSON(user, url) {
@@ -385,7 +401,7 @@ function readRegister() {
 
                 guardarEnJSON(user, url);
 
-                alert("Procesando datos...")
+                alert("Procesando datos...");
             }
         }
         else if(marca.checked) {
@@ -440,4 +456,8 @@ function readLogin() {
                 "password": password};
 
     loadLogin(url_login, user);
+}
+
+function readFoto() {
+    console.log(localStorage);
 }

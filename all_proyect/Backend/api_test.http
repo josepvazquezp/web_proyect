@@ -173,15 +173,6 @@
 #     "password": "barzar45"
 # }
 
-// get producto marca categoria
-# GET http://localhost:3000/api/products HTTP/1.1 
-# content-type: application/json
-
-# {
-#     "marca": "BOCA DRAGÓN",
-#     "categoria": "ropa"
-# }
-
 // get user id
 # GET http://localhost:3000/api/user/qwertyuiop-637a5abde3f6f33d7a14317f-user
 
@@ -190,6 +181,15 @@
 
 // get bazar id
 # GET http://localhost:3000/api/user/qwertyuiop-637a5dffe7da54eb665cf566-bazar
+
+// PUT foto de perfil
+PUT http://localhost:3000/api/users HTTP/1.1 
+content-type: application/json
+
+{
+    "usuario_token": "qwertyuiop-637a5dffe7da54eb665cf566-bazar",
+    "ruta": "images/logo_b1.jpg"
+}
 
 # DELETE http://localhost:3000/api/users HTTP/1.1 
 # content-type: application/json

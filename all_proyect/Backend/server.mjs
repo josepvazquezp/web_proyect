@@ -58,7 +58,7 @@ let userSchema = mongoose.Schema({
               required: false},
     historial: {type: Array,
                 required: false},
-    image: {type: String,
+    imagen: {type: String,
             required: false}
 });
 
@@ -1148,46 +1148,108 @@ app.put('/api/comprar', (req, res) => {
     }
 });
 
-// actualización de usuario pendiente
 app.put('/api/users', (req, res) => {
     console.log(chalk.blue("Actualizando información..."));
 
-    let nombre = req.body.nombre,
-        correo = req.body.correo,
-        sexo = req.body.sexo,
-        object_to_update = {},
-        flag_updated = false;
-    
-    if(nombre != undefined) {
-        object_to_update.nombre = nombre;
-        flag_updated = true;
-    }
+    let complete_token = req.body.usuario_token;
+    let new_path = req.body.ruta;
 
-    if(correo != undefined) {
-        object_to_update.correo = correo;
-        flag_updated = true;
-    }
-
-    if(sexo != undefined) {
-        object_to_update.sexo = sexo;
-        flag_updated = true;
-    }
-
-    if(flag_updated) {
-        User.findByIdAndUpdate(id, object_to_update, {new: true}, (err, doc) => {
-            if(err) {
-                console.log("Error: " + err);
-                res.send(err);
-            }
-            else {
-                console.log(chalk.green("Usuario actualizado:"));
-                console.log(doc);
-                res.send(doc);
-            }
-        });
+    if(complete_token == undefined) {
+        res.sendStatus(400);
     }
     else {
-        res.send("No se ha actualizado");
+        let id_token, index;
+
+        for(let i = 11 ; complete_token[i] != '-' ; i++) {
+            index = i;
+        }
+
+        id_token = complete_token.substring(11, index + 1);
+
+        let tipo = complete_token.substring(index + 2, complete_token.length);
+        console.log(tipo);
+
+        if(tipo == 'user') {
+            User.findById(id_token, (err, docs) => {
+                if(err) {
+                    console.log("Error: " + err);
+                    res.send(err);
+                }
+                else {
+                    let user = docs;
+
+                    user.imagen = new_path;
+
+                    User.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
+                        if(err) {
+                            console.log("Error: " + err);
+                            res.send(err);
+                        }
+                        else {
+                            console.log(chalk.green("Perfil actualizado:"));
+                            console.log(doc);
+                            res.status(200);
+                            res.send(doc);
+                        }
+                    });
+                }
+            });
+        }
+        else if(tipo == 'marca') {
+            Brand.findById(id_token, (err, docs) => {
+                if(err) {
+                    console.log("Error: " + err);
+                    res.send(err);
+                }
+                else {
+                    let user = docs;
+    
+                    user.logo = new_path;
+
+                    Brand.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
+                        if(err) {
+                            console.log("Error: " + err);
+                            res.send(err);
+                        }
+                        else {
+                            console.log(chalk.green("Perfil actualizado:"));
+                            console.log(doc);
+                            res.status(200);
+                            res.send(doc);
+                        }
+                    });
+                }
+            });
+        }
+        else if(tipo == 'bazar') {
+            Bazaar.findById(id_token, (err, docs) => {
+                if(err) {
+                    console.log("Error: " + err);
+                    res.send(err);
+                }
+                else {
+                    let user = docs;
+    
+                    user.logo = new_path;
+
+                    Bazaar.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
+                        if(err) {
+                            console.log("Error: " + err);
+                            res.send(err);
+                        }
+                        else {
+                            console.log(chalk.green("Perfil actualizado:"));
+                            console.log(doc);
+                            res.status(200);
+                            res.send(doc);
+                        }
+                    });
+                }
+            });
+        }
+        else {
+            res.sendStatus(400);
+        }
     }
 });
 
