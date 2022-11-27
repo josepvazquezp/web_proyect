@@ -92,6 +92,24 @@ window.onload = function () {
         
         $("#modalFoto").modal();
     }
+    else if(localStorage.getItem("extension") != undefined) {
+        let extension = localStorage.getItem("extension");
+        let xhr = new XMLHttpRequest();
+        xhr.open('PUT', "http://localhost:3000/api/users");
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({"usuario_token": localStorage.getItem("token"), "ruta": "uploads/temp" + extension}));
+        xhr.onload = function () {
+            if (xhr.status != 200) { 
+                alert("No se puedo actualizar la foto de perfil.");
+            } else {
+                // alert("Actrualizando imagen ...");
+                showNav();
+            }
+        };
+
+        localStorage.removeItem("extension");
+        // showNav();
+    }
 }
 
 // function putJSON(user, url) {
@@ -198,7 +216,6 @@ function showNav() {
     }
     else {
         let url_temp = "http://localhost:3000/api/user/" + token;
-        console.log(url_temp);
         let xhr = new XMLHttpRequest();
         xhr.open('GET', url_temp);
         xhr.send();
@@ -217,8 +234,8 @@ function showNav() {
                     show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><table width="100%"><tr><td><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.bazar + '&nbsp; &nbsp;<img class="rounded-circle" src="' + user.logo + '" height="30" widht="15"></a><div class="dropdown-menu" aria-labelledby="navbarDropdown2"><a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalFoto">Cambiar foto de perfil</a><a class="dropdown-item" href="#" onclick="logOut();">Cerrar sesión</a></div></li></td><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalShop"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li></td></tr></table></li></ul>'; 
                 }
                 else if(user.tipo == 'user') {
-                    user.image = user.image == null? "images/kirby_logo.png" : user.image;
-                    show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><table width="100%"><tr><td><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.correo + '&nbsp; &nbsp;<img class="rounded-circle" src="' + user.image + '" height="30" widht="15"></a><div class="dropdown-menu" aria-labelledby="navbarDropdown2"><a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalFoto">Cambiar foto de perfil</a><a class="dropdown-item" href="#" onclick="logOut();">Cerrar sesión</a></div></li></td><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalShop"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li></td></tr></table></li></ul>';
+                    user.imagen = user.imagen == null? "images/kirby_logo.png" : user.imagen;
+                    show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><table width="100%"><tr><td><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.correo + '&nbsp; &nbsp;<img class="rounded-circle" src="' + user.imagen + '" height="30" widht="15"></a><div class="dropdown-menu" aria-labelledby="navbarDropdown2"><a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalFoto">Cambiar foto de perfil</a><a class="dropdown-item" href="#" onclick="logOut();">Cerrar sesión</a></div></li></td><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalShop"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li></td></tr></table></li></ul>';
                 }
             }
         };
@@ -459,5 +476,7 @@ function readLogin() {
 }
 
 function readFoto() {
-    console.log(localStorage);
+    let extension = document.getElementById("archive").value;
+    extension = extension.substr(extension.lastIndexOf("."));
+    localStorage.setItem("extension", extension);
 }

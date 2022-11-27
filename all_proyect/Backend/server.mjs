@@ -1152,9 +1152,9 @@ app.put('/api/users', (req, res) => {
     console.log(chalk.blue("Actualizando información..."));
 
     let complete_token = req.body.usuario_token;
-    let new_path = req.body.ruta;
+    let ruta = req.body.ruta;
 
-    if(complete_token == undefined) {
+    if(complete_token == undefined || ruta == undefined) {
         res.sendStatus(400);
     }
     else {
@@ -1167,89 +1167,104 @@ app.put('/api/users', (req, res) => {
         id_token = complete_token.substring(11, index + 1);
 
         let tipo = complete_token.substring(index + 2, complete_token.length);
-        console.log(tipo);
 
-        if(tipo == 'user') {
-            User.findById(id_token, (err, docs) => {
-                if(err) {
-                    console.log("Error: " + err);
-                    res.send(err);
-                }
-                else {
-                    let user = docs;
+        let extension = ruta.substr(ruta.lastIndexOf("."))
 
-                    user.imagen = new_path;
+        let new_path = "images/" + id_token + extension;
+        let complete_path = "views/" + new_path;
+        ruta = "views/" + ruta;
 
-                    User.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
+        fs.rename(ruta, complete_path, function (errorRename) {
+            if(errorRename) {
+                throw errorRename;
+                // console.log("No se pudo actualizar");
+                // res.status(400);
+                // res.send(errorRename);
+            }
+            else {
+                if(tipo == 'user') {
+                    User.findById(id_token, (err, docs) => {
                         if(err) {
                             console.log("Error: " + err);
                             res.send(err);
                         }
                         else {
-                            console.log(chalk.green("Perfil actualizado:"));
-                            console.log(doc);
-                            res.status(200);
-                            res.send(doc);
+                            let user = docs;
+        
+                            user.imagen = new_path;
+        
+                            User.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
+                                if(err) {
+                                    console.log("Error: " + err);
+                                    res.send(err);
+                                }
+                                else {
+                                    console.log(chalk.green("Perfil actualizado:"));
+                                    console.log(doc);
+                                    res.status(200);
+                                    res.send(doc);
+                                }
+                            });
                         }
                     });
                 }
-            });
-        }
-        else if(tipo == 'marca') {
-            Brand.findById(id_token, (err, docs) => {
-                if(err) {
-                    console.log("Error: " + err);
-                    res.send(err);
-                }
-                else {
-                    let user = docs;
-    
-                    user.logo = new_path;
-
-                    Brand.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
+                else if(tipo == 'marca') {
+                    Brand.findById(id_token, (err, docs) => {
                         if(err) {
                             console.log("Error: " + err);
                             res.send(err);
                         }
                         else {
-                            console.log(chalk.green("Perfil actualizado:"));
-                            console.log(doc);
-                            res.status(200);
-                            res.send(doc);
+                            let user = docs;
+            
+                            user.logo = new_path;
+        
+                            Brand.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
+                                if(err) {
+                                    console.log("Error: " + err);
+                                    res.send(err);
+                                }
+                                else {
+                                    console.log(chalk.green("Perfil actualizado:"));
+                                    console.log(doc);
+                                    res.status(200);
+                                    res.send(doc);
+                                }
+                            });
                         }
                     });
                 }
-            });
-        }
-        else if(tipo == 'bazar') {
-            Bazaar.findById(id_token, (err, docs) => {
-                if(err) {
-                    console.log("Error: " + err);
-                    res.send(err);
-                }
-                else {
-                    let user = docs;
-    
-                    user.logo = new_path;
-
-                    Bazaar.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
+                else if(tipo == 'bazar') {
+                    Bazaar.findById(id_token, (err, docs) => {
                         if(err) {
                             console.log("Error: " + err);
                             res.send(err);
                         }
                         else {
-                            console.log(chalk.green("Perfil actualizado:"));
-                            console.log(doc);
-                            res.status(200);
-                            res.send(doc);
+                            let user = docs;
+            
+                            user.logo = new_path;
+        
+                            Bazaar.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
+                                if(err) {
+                                    console.log("Error: " + err);
+                                    res.send(err);
+                                }
+                                else {
+                                    console.log(chalk.green("Perfil actualizado:"));
+                                    console.log(doc);
+                                    res.status(200);
+                                    res.send(doc);
+                                }
+                            });
                         }
                     });
                 }
-            });
-        }
-        else {
-            res.sendStatus(400);
-        }
+                else {
+                    res.sendStatus(400);
+                }
+            }
+        });
     }
 });
 
