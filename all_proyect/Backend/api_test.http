@@ -183,13 +183,13 @@
 # GET http://localhost:3000/api/user/qwertyuiop-637a5dffe7da54eb665cf566-bazar
 
 // PUT foto de perfil
-PUT http://localhost:3000/api/users HTTP/1.1 
-content-type: application/json
+# PUT http://localhost:3000/api/users HTTP/1.1 
+# content-type: application/json
 
-{
-    "usuario_token": "qwertyuiop-637a5dffe7da54eb665cf566-bazar",
-    "ruta": "images/logo_b1.jpg"
-}
+# {
+#     "usuario_token": "qwertyuiop-637a5dffe7da54eb665cf566-bazar",
+#     "ruta": "images/logo_b1.jpg"
+# }
 
 # DELETE http://localhost:3000/api/users HTTP/1.1 
 # content-type: application/json

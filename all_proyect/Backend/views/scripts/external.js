@@ -257,11 +257,9 @@ function showContent() {
     let marca = document.getElementById("marca_count");
 
     let nombre_m = document.getElementById("account_marca");
-    let logo_m = document.getElementById("account_logo_m");
     let url_m = document.getElementById("account_insta");
 
     let nombre_b = document.getElementById("account_bazar");
-    let logo_b = document.getElementById("account_logo_b");
     let url_b = document.getElementById("account_url_b");
 
     if(user.checked) {
@@ -277,20 +275,12 @@ function showContent() {
             url_m.removeAttribute("required");
         }
 
-        if(logo_m.hasAttribute("required")) {
-            logo_m.removeAttribute("required");
-        }
-
         if(nombre_b.hasAttribute("required")) {
             nombre_b.removeAttribute("required");
         }
 
         if(url_b.hasAttribute("required")) {
             url_b.removeAttribute("required");
-        }
-
-        if(logo_b.hasAttribute("required")) {
-            logo_b.removeAttribute("required");
         }
     }
     else if(marca.checked) {
@@ -299,7 +289,6 @@ function showContent() {
         el_bazar.style.display='none';
 
         nombre_m.setAttribute('required', '');
-        logo_m.setAttribute('required', '');
         url_m.setAttribute('required', '');
 
         if(nombre_b.hasAttribute("required")) {
@@ -308,10 +297,6 @@ function showContent() {
 
         if(url_b.hasAttribute("required")) {
             url_b.removeAttribute("required");
-        }
-
-        if(logo_b.hasAttribute("required")) {
-            logo_b.removeAttribute("required");
         }
     }
     else if(bazar.checked) {
@@ -327,12 +312,7 @@ function showContent() {
             url_m.removeAttribute("required");
         }
 
-        if(logo_m.hasAttribute("required")) {
-            logo_m.removeAttribute("required");
-        }
-
         nombre_b.setAttribute('required', '');
-        logo_b.setAttribute('required', '');
         url_b.setAttribute('required', '');
     }
 }
@@ -423,7 +403,6 @@ function readRegister() {
         }
         else if(marca.checked) {
             let nombre_m = document.getElementById("account_marca").value;
-            let logo_m = document.getElementById("account_logo_m").value;
             let url_m = document.getElementById("account_insta").value;
             let categoria = document.getElementById("account_c_m").value;
 
@@ -433,16 +412,15 @@ function readRegister() {
                         "password": password,
                         "fecha": fecha,
                         "marca": nombre_m,
-                        "logo": logo_m,
+                        "logo": "images/kirby_logo.png",
                         "categoria": categoria,
                         "url": url_m,
                         "tipo": "marca"};
 
-            alert(JSON.stringify(user));
+            guardarEnJSON(user, url);
         }
         else if(bazar.checked) {
             let nombre_b = document.getElementById("account_bazar").value;
-            let logo_b = document.getElementById("account_logo_b").value;
             let url_b = document.getElementById("account_url_b").value;
 
             let user = {"nombre": nombre, 
@@ -451,12 +429,14 @@ function readRegister() {
                         "password": password,
                         "fecha": fecha,
                         "bazar": nombre_b,
-                        "logo": logo_b,
+                        "logo": "images/kirby_logo.png",
                         "url": url_b,
                         "tipo": "bazar"};
 
-            alert(JSON.stringify(user));
-
+            guardarEnJSON(user, url);
+        }
+        else {
+            alert("datos de usuario mal ingresados");    
         }
     }
     else {
