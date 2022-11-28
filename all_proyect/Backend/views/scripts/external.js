@@ -19,6 +19,14 @@ function loadLogin(urlJSON, user) {
             localStorage.setItem("token", xhr.responseText); 
             alert("Sesion inicada correctamente.");
             showNav();
+
+            let path = window.location.pathname;
+
+            let actual = path.split("/").pop();
+
+            if(localStorage.getItem("token") && (actual == "" || actual == "home")) {
+                displayFavoritos();
+    }
         }
     };
 }
@@ -41,44 +49,16 @@ function guardarEnJSON(user, url) {
     };
 }
 
-// function loginJSON(data, url) {
-//     let xhr = new XMLHttpRequest();
-//     xhr.open('POST', url);
-//     xhr.setRequestHeader('Content-Type', 'application/json');
-//     xhr.send(JSON.stringify(data));
-//     xhr.onload = function () {
-//         if (xhr.status == 201 || xhr.status == 200) { 
-//             localStorage.setItem("token", xhr.responseText);
-//             let temp = "http://localhost:3000/api/users/";
-//             temp += data.correo;
-//             localStorage.setItem("temp", temp);
-//             window.location.href = "index.html";
-            
-//         } else {
-//             alert("No se pudo iniciar sesión.");
-//         }
-//     };
-// }
-
-// function loadLoginUser(urlJSON, cbOk, cbErr) {
-//     let xhr = new XMLHttpRequest();
-//     xhr.open('GET', urlJSON);
-//     xhr.send();
-//     xhr.onload = function () {
-//         if (xhr.status != 200) { 
-//             cbErr();
-//             info.innerHTML = "";
-//         } else {
-//             let datos = [];
-//             datos.push(JSON.parse(xhr.response)); 
-//             cbOk(datos);
-//             console.log(datos); 
-//         }
-//     };
-// }
-
 window.onload = function () {
     showNav();
+
+    let path = window.location.pathname;
+
+    let actual = path.split("/").pop();
+
+    if(localStorage.getItem("token") && (actual == "" || actual == "home")) {
+        displayFavoritos();
+    }
 
     if(localStorage.getItem("register") != undefined) {
         localStorage.removeItem("register");
@@ -459,4 +439,77 @@ function readFoto() {
     let extension = document.getElementById("archive").value;
     extension = extension.substr(extension.lastIndexOf("."));
     localStorage.setItem("extension", extension);
+}
+
+function displayFavoritos() {
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', "http://localhost:3000/api/categorias");
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({"usuario_token": localStorage.getItem("token")}));
+    xhr.onload = function () {
+        if (xhr.status != 200) { 
+            console.log("No es tipo user.");
+        } else { 
+            let categorias = JSON.parse(xhr.responseText); 
+            showFavoritos(categorias);        
+        }
+    };
+}
+
+function showFavoritos(categorias) {
+    let l = categorias.length;
+    console.log(l);
+    let favoritos = document.getElementById("favoritos");
+    favoritos.innerHTML = "";
+
+    let title = document.createElement("h4");
+    title.className = "cat";
+    title.align = "center";
+    title.innerHTML = "Favoritos <br> <br>";
+
+    favoritos.appendChild(title);
+
+    let table = document.createElement("table");
+    table.width = "98%";
+    let tr = document.createElement("tr");
+
+    for(let i = 0 ; i < l ; i++) {
+        if( i == 5) {
+            table.appendChild(tr);
+            tr = document.createElement("tr");
+        }
+
+        let td = document.createElement("td");
+        td.align = "center";
+        
+        switch(categorias[i]) {
+            case "hogar": td.innerHTML = "<h5>Hogar</h5><a href='marcas'><img src='images/c1.jpg' height='300' width='200'></a>";
+                          break;
+            case "belleza": td.innerHTML = "<h5>Belleza y cuidado</h5><a href='marcas'><img src='images/c2.jpg' height='300' width='200'></a>";
+                            break;
+            case "calzado": td.innerHTML = "<h5>Calzado</h5><a href='marcas'><img src='images/c3.jpg' height='300' width='200'></a>";
+                            break;
+            case "ropa": td.innerHTML = "<h5>Ropa</h5><a href='marcas'><img src='images/c4.jpg' height='300' width='200'></a>";
+                         break;       
+            case "joyeria": td.innerHTML = "<h5>Joyería</h5><a href='marcas'><img src='images/c5.jpg' height='300' width='200'></a>";
+                            break;
+            case "deporte": td.innerHTML = "<h5>Deporte, al aire libre</h5><a href='marcas'><img src='images/c6.jpg' height='300' width='200'></a>";
+                            break;
+            case "arte": td.innerHTML = "<h5>Arte</h5><a href='marcas'><img src='images/c7.jpg' height='300' width='200'></a>";
+                         break;
+            case "cocina": td.innerHTML = "<h5>Cocina</h5><a href='marcas'><img src='images/c8.jpg' height='300' width='200'></a>";
+                           break;
+            case "bebe": td.innerHTML = "<h5>Bebe</h5><a href='marcas'><img src='images/c9.jpg' height='300' width='200'></a>";
+                         break;
+            case "mascotas": td.innerHTML = "<h5>Mascotas</h5><a href='marcas'><img src='images/c10.jpg' height='300' width='200'></a>";
+                             break;
+            default: td.innerHTML = "";
+        }
+
+        tr.appendChild(td);
+    }
+
+    table.appendChild(tr);
+
+    favoritos.appendChild(table);
 }

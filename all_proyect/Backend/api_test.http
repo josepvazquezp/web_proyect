@@ -191,6 +191,13 @@
 #     "ruta": "images/logo_b1.jpg"
 # }
 
+# POST http://localhost:3000/api/categorias HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "usuario_token": "qwertyuiop-637a5abde3f6f33d7a14317f-user"
+# }
+
 # DELETE http://localhost:3000/api/users HTTP/1.1 
 # content-type: application/json
 

@@ -23,7 +23,7 @@ body {
     background-color: var(--dark_blue_per);
 }
 
-#cat {
+.cat {
     color: var(--light_blue_per);
 }
 

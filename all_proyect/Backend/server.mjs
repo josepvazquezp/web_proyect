@@ -1268,6 +1268,50 @@ app.put('/api/users', (req, res) => {
     }
 });
 
+app.post('/api/categorias', (req, res) => {
+    let complete_token = req.body.usuario_token;
+
+    if(complete_token == undefined) {
+        res.sendStatus(400);
+    }
+    else {
+        let id_token, index;
+
+        for(let i = 11 ; complete_token[i] != '-' ; i++) {
+            index = i;
+        }
+
+        id_token = complete_token.substring(11, index + 1);
+
+        let tipo = complete_token.substring(index + 2, complete_token.length);
+
+        if(tipo == 'user') {
+            User.find({
+            }, function (err, docs) {
+                let temp;
+                for(let i = 0 ; i < docs.length ; i++){
+                    if(docs[i].id == id_token) {
+                        temp = docs[i];
+                    }
+                }
+        
+                if(temp == undefined) {
+                    res.status(400);
+                    res.send("No se encontro el usuario.");
+                }
+                else{
+                    res.status(200);
+                    res.send(temp.categorias);
+                }
+            });
+        }
+        else {
+            res.status(200);
+            res.send("No es un tipo user."); 
+        }
+    }
+});
+
 // delete pendiente
 app.delete('/api/users', (req, res) => {
     console.log(chalk.blue("Actualizando información..."));
