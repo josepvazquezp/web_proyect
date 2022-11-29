@@ -225,6 +225,13 @@ function showNav() {
 
 function logOut() {
     localStorage.clear();
+    
+    let busqueda = document.getElementById("busqueda");
+    busqueda.innerHTML = "";
+
+    let favoritos = document.getElementById("favoritos");
+    favoritos.innerHTML = "";
+
     showNav();
 }
 
@@ -458,7 +465,6 @@ function displayFavoritos() {
 
 function showFavoritos(categorias) {
     let l = categorias.length;
-    console.log(l);
     let favoritos = document.getElementById("favoritos");
     favoritos.innerHTML = "";
 
@@ -512,4 +518,82 @@ function showFavoritos(categorias) {
     table.appendChild(tr);
 
     favoritos.appendChild(table);
+}
+
+function busquedaHome(){
+    let texto = document.getElementById("TextoBusqueda").value;
+    if(texto != undefined && texto != ""){
+
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', "http://localhost:3000/api/productos/" + texto);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send();
+        xhr.onload = function(){
+            if(xhr.status == 200){
+                let productos = [];
+                productos = JSON.parse(xhr.responseText);
+                let l = productos.length;
+                let busqueda = document.getElementById("busqueda");
+                busqueda.innerHTML = "";
+
+                let title = document.createElement("h4");
+                title.className = "cat";
+                title.align = "center";
+                
+
+                if(l == 0) {
+                    title.innerHTML = "No se encontro ningún producto con ese nombre. <br> <br>";
+                    busqueda.appendChild(title);
+                }
+                else {
+                    title.innerHTML = "Productos encontrados <br> <br>";
+                    busqueda.appendChild(title);
+
+                    let table = document.createElement("table");
+                    table.width = "90%";
+
+                    let tr = document.createElement("tr");
+                    
+                    for(let i = 0; i < l; i++){
+                        if(i % 3 == 0){
+                            table.appendChild(tr);
+                            tr = document.createElement("tr");
+                        }
+
+                        let td = document.createElement("td");
+                        td.align = "center";
+                        //Extender
+                        let table_temp = document.createElement("table");
+                        table_temp.align = "left";
+
+                        if(productos.length > 3)
+                            table_temp.width = "90%";
+
+                        let tr_temp = document.createElement("tr");
+
+                        let td_in_1 = document.createElement("td");
+                        td_in_1.innerHTML = "<h5>" + productos[i].nombre + "</h5><p>" + (productos[i].stock > 0? "Disponible" : "No disponible") + "</p>";
+                        tr_temp.appendChild(td_in_1);
+
+                        let td_in_2 = document.createElement("td");
+                        td_in_2.align = "right";
+                        td_in_2.innerHTML = '<a name="" id="" class="btn" href="producto" role="button"><img src="' + productos[i].imagen + '" width="200"></a>';
+                        tr_temp.appendChild(td_in_2);
+
+                        table_temp.appendChild(tr_temp);
+
+                        td.appendChild(table_temp);
+
+                        tr.appendChild(td);
+                    }
+
+                    table.appendChild(tr);
+
+                    busqueda.appendChild(table);
+                }
+            }
+        }
+    }else{
+        alert("Inserte minimo una letra chingada madre");
+    }
 }

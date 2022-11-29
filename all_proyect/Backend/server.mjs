@@ -1312,6 +1312,34 @@ app.post('/api/categorias', (req, res) => {
     }
 });
 
+app.get('/api/productos/:nombre', (req, res) => {
+    let texto = req.params.nombre;
+    if(texto != undefined){
+        let arregloProductos = [];
+
+        Product.find({
+            
+        }, function (err, docs){
+            if(err){
+                console.log(chalk.red("NO SE ENCONTRARON PRODUCTOS CON EL FILTRO"));
+                res.sendStatus(404);
+
+            }else{
+                for(let i = 0; i < docs.length; i++) {
+                    if(docs[i].nombre.toLowerCase().includes(texto.toLowerCase()))
+                        arregloProductos.push(docs[i]);
+                }
+                res.status(200);
+                res.send(arregloProductos);
+            }
+        });
+
+    }else{
+        console.log(chalk.red("NO SE INGRESÓ UN TEXTO!!"));
+        res.sendStatus(401);
+    }
+});
+
 // delete pendiente
 app.delete('/api/users', (req, res) => {
     console.log(chalk.blue("Actualizando información..."));
