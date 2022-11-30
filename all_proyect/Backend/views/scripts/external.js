@@ -79,6 +79,23 @@ window.onload = function () {
         
         $("#modalFoto").modal();
     }
+    else if(localStorage.getItem("extension") != undefined && localStorage.getItem("product_id")) {
+        let extension = localStorage.getItem("extension");
+        let xhr = new XMLHttpRequest();
+        xhr.open('PUT', "http://localhost:3000/api/products");
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({"product": localStorage.getItem("product_id"), "ruta": "uploads/temp" + extension}));
+        xhr.onload = function () {
+            if (xhr.status != 200) { 
+                alert("No se puedo actualizar la foto de perfil.");
+            } else {
+                alert("Se ha agregado el producto");
+            }
+        };
+
+        localStorage.removeItem("extension");
+        localStorage.removeItem("product_id");
+    }
     else if(localStorage.getItem("extension") != undefined) {
         let extension = localStorage.getItem("extension");
         let xhr = new XMLHttpRequest();
@@ -98,36 +115,6 @@ window.onload = function () {
         // showNav();
     }
 }
-
-// function putJSON(user, url) {
-//     let xhr = new XMLHttpRequest();
-//     xhr.open('PUT', url);
-//     xhr.setRequestHeader('Content-Type', 'application/json');
-//     xhr.send(JSON.stringify(user));
-//     xhr.onload = function () {
-//         if (xhr.status != 201) { 
-//             console.log("No se pudo generar el archivo.");
-//         } else { 
-//             loadJSON("http://localhost:3000/api/users", cbOk, cbErr);
-//             console.log(xhr.responseText);
-//             flag_update = true;
-//         }
-//     };
-// }
-
-// function deleteJSON(url) {
-//     let xhr = new XMLHttpRequest();
-//     xhr.open('DELETE', url);
-//     xhr.send();
-//     xhr.onload = function () {
-//         if (xhr.status != 201) { 
-//             console.log("No se pudo generar el archivo.");
-//         } else { 
-//             loadJSON("http://localhost:3000/api/users", cbOk, cbErr);
-//             console.log(xhr.responseText); 
-//         }
-//     };
-// }
 
 function showMap() {
     if (navigator.geolocation) {
@@ -451,6 +438,10 @@ function readLogin() {
 
 function readFoto() {
     let extension = document.getElementById("archive").value;
+    if(extension == "") {
+        extension = document.getElementById("archive_p").value;
+    }
+
     extension = extension.substr(extension.lastIndexOf("."));
     localStorage.setItem("extension", extension);
 }
@@ -669,7 +660,11 @@ function postProduct(product) {
             console.log("Un parametro del producto esta mal.");
         } else { 
             let id = xhr.responseText; 
-            alert(id);        
+            localStorage.setItem("product_id", id);
         }
     };
+}
+
+function imageProduct() {
+    localStorage.setItem("extension", extension);
 }
