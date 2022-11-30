@@ -60,6 +60,13 @@ window.onload = function () {
         displayFavoritos();
     }
 
+    if(localStorage.getItem("product") != undefined) {
+        let p = localStorage.getItem("product");
+        postProduct(p);
+        $("#modalImageP").modal();
+        localStorage.removeItem("product");
+    }
+
     if(localStorage.getItem("register") != undefined) {
         localStorage.removeItem("register");
 
@@ -596,4 +603,73 @@ function busquedaHome(){
     }else{
         alert("Inserte minimo una letra chingada madre");
     }
+}
+
+function readProduct() {
+    let name = document.getElementById("product_name").value;
+    let price = document.getElementById("product_price").value;
+    let cat = document.getElementById("product_cat").value;
+    let stock = document.getElementById("product_stock").value;
+    let des = document.getElementById("product_des").value;
+
+    let temp = "";
+    for(let i = 0, ac = 0 ; i < des.length ; i++) {
+        if(des[i] == ' ')
+            ac++;
+
+        if(ac == 6) {
+            ac = 0;
+            temp += "<br>";
+            i++;
+        }
+
+        temp += des[i];
+    }
+
+    let categoria;
+
+    cat = Number(cat);
+
+    switch(cat) {
+        case 1: categoria = "hogar";
+                break;
+        case 2: categoria = "belleza";
+                break;
+        case 3: categoria = "calzado";
+                break;
+        case 4: categoria = "ropa";
+                break;
+        case 5: categoria = "joyeria";
+                break;
+        case 6: categoria = "deporte";
+                break;
+        case 7: categoria = "arte";
+                break;
+        case 8: categoria = "cocina";
+                break;
+        case 9: categoria = "bebe";
+                break;
+        case 10: categoria = "mascotas";
+                break;
+        default: categoria = "hogar";
+    }
+
+    let product = {"nombre": name, "precio": price, "categoria": categoria, "stock": stock, "descripcion": temp, "usuario_token": localStorage.getItem("token")};
+    localStorage.setItem("product", JSON.stringify(product));
+
+}
+
+function postProduct(product) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', "http://localhost:3000/api/products");
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(product);
+    xhr.onload = function () {
+        if (xhr.status != 201) { 
+            console.log("Un parametro del producto esta mal.");
+        } else { 
+            let id = xhr.responseText; 
+            alert(id);        
+        }
+    };
 }

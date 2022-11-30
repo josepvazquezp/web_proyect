@@ -132,7 +132,7 @@ let productsSchema = mongoose.Schema({
     descripcion: {type: String,
                   required: true},
     imagen: {type: String,
-            required: true},
+            required: false},
     categoria: {type: String,
                 required: true},
     stock: {type: Number,
@@ -375,15 +375,29 @@ app.post('/api/users', (req, res) => {
     
 });
 
-app.post('/api/products/:email', (req, res) => {
-    let email = req.params.email;
+app.post('/api/products', (req, res) => {
+    let token = req.body.usuario_token;
+
+    let id_token;
+
+    for(let i = 11 ; token[i] != '-' ; i++) {
+        id_token = i;
+    }
+
+    id_token = token.substring(11, id_token + 1);
 
     Brand.find({
-        correo: {$regex: email}
     }, function (err, docs) {
-        if(docs.length == 1) {
-            let marca = docs[0].marca;
-            let logo = docs[0].logo;
+        let temp_brand;
+        for(let i = 0 ; i < docs.length ; i++) {
+            if(docs[i].id == id_token) {
+                temp_brand = docs[i];
+            }
+        }
+
+        if(temp_brand != undefined) {
+            let marca = temp_brand.marca;
+            let logo = temp_brand.logo;
 
             Product.find({        
             }, function (err, docs) {
@@ -444,17 +458,6 @@ app.post('/api/products/:email', (req, res) => {
                         flag = false;
                     }
         
-                    if(req.body.imagen == undefined) {
-                        if(flag) {
-                            message += "imagen";
-                        }
-                        else {
-                            message += ", imagen";
-                        }
-        
-                        flag = false;
-                    }
-        
                     message += ".";
         
                     if(!flag) {
@@ -462,10 +465,13 @@ app.post('/api/products/:email', (req, res) => {
                         res.send(message);
                     }
                     else {
-                        let newUser = {local_id: local_id, nombre: req.body.nombre, precio: req.body.precio, categoria: req.body.categoria, stock: req.body.stock, descripcion: req.body.descripcion, imagen: req.body.imagen, marca: marca, logo: logo};
-                        let user = Product(newUser);
-                        user.save().then((doc) => console.log(chalk.green("Producto creado: ") + doc));
-                        res.sendStatus(201);
+                        let newProduct = {local_id: local_id, nombre: req.body.nombre, precio: req.body.precio, categoria: req.body.categoria, stock: req.body.stock, descripcion: req.body.descripcion, marca: marca, logo: logo};
+                        let product = Product(newProduct);
+                        product.save().then((doc) => {
+                            console.log(chalk.green("Producto creado: ") + doc);
+                            res.status(201);
+                            res.send(doc.id);
+                        });
                     }
                 }
                 else {
@@ -1263,6 +1269,56 @@ app.put('/api/users', (req, res) => {
                 else {
                     res.sendStatus(400);
                 }
+            }
+        });
+    }
+});
+
+app.put('/api/products', (req, res) => {
+    console.log(chalk.blue("Actualizando información..."));
+
+    let id = req.body.product;
+    let ruta = req.body.ruta;
+
+    if(id == undefined || ruta == undefined) {
+        res.sendStatus(400);
+    }
+    else {
+        let extension = ruta.substr(ruta.lastIndexOf("."))
+
+        let new_path = "images/" + id + extension;
+        let complete_path = "views/" + new_path;
+        ruta = "views/" + ruta;
+
+        fs.rename(ruta, complete_path, function (errorRename) {
+            if(errorRename) {
+                throw errorRename;
+            }
+            else {
+                Product.findById(id, (err, docs) => {
+                    if(err) {
+                        console.log("Error: " + err);
+                        res.send(err);
+                    }
+                    else {
+                        let product = docs;
+    
+                        product.imagen = new_path;
+    
+                        Product.findByIdAndUpdate(product.id, product, {new: true}, (err, doc) => {
+                            if(err) {
+                                console.log("Error: " + err);
+                                res.send(err);
+                            }
+                            else {
+                                console.log(chalk.green("Producto actualizado:"));
+                                console.log(doc);
+                                res.status(200);
+                                res.send(doc);
+                            }
+                        });
+                    }
+                });
             }
         });
     }

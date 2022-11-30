@@ -46,7 +46,7 @@
 # }
 
 // Post producto
-# POST http://localhost:3000/api/products/boca.dragon@brand.mx HTTP/1.1 
+# POST http://localhost:3000/api/products HTTP/1.1 
 # content-type: application/json
 
 # {
@@ -55,7 +55,7 @@
 #     "categoria": "ropa",
 #     "stock": 15,
 #     "descripcion": "All pinked-out, head-to-toe in Boca Dragon vintage heirlooms. Silk Chinese jacket, 80’s button-up, and 80’s balloon pants POW 💕💕",
-#     "imagen": "images/r2_p1.jpg"
+#     "usuario_token": "qwertyuiop-637a5de5e7da54eb665cf563-marca"
 # }
 
 // Post duda
