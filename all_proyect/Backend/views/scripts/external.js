@@ -602,7 +602,7 @@ function busquedaHome(){
                         let table_temp = document.createElement("table");
                         table_temp.align = "left";
 
-                        if(productos.length > 3)
+                        if(productos.length >= 3)
                             table_temp.width = "90%";
 
                         let tr_temp = document.createElement("tr");
@@ -757,7 +757,7 @@ function displayMarcas() {
                 a.href = "productos_marca";
                 a.role = "button";
                 a.id = array[i].marca; 
-                a.onclick = "saveMarca(this);";
+                a.addEventListener("click", saveMarca);
 
                 let img = document.createElement("img");
                 img.src = array[i].logo;
@@ -848,6 +848,129 @@ function displayBazares() {
     };
 }
 
-function saveMarca(object) {
-    localStorage.setItem("marca", object.id);
+function saveMarca() {
+    localStorage.setItem("marca", this.id);
+}
+
+function displayProductos() {
+    let title = document.getElementById("t_pestana");
+    let marca = localStorage.getItem("marca");
+    title.innerHTML = "Productos " + marca;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open('PUT', "http://localhost:3000/api/marca");
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({"marca": marca}));
+    xhr.onload = function () {
+        if (xhr.status != 200) { 
+            console.log("No se encontro la marca.");
+        } else { 
+            let brand = JSON.parse(xhr.response);
+            let m_logo = document.getElementById("marca_and_logo");
+
+            let m_table = document.createElement("table");
+            m_table.width = "90%";
+
+            let m_tr = document.createElement("tr");
+
+            let m_th = document.createElement("th");
+
+            let m_inner_table = document.createElement("table");
+            let m_inner_tr = document.createElement("tr");
+            let m_innner_td_1 = document.createElement("td");
+            
+            let m_a = document.createElement("a");
+            m_a.className = "btn btn-primary rounded-circle";
+            m_a.href = brand.url;
+            m_a.role = "button";
+            
+            let m_img = document.createElement("img");
+            m_img.src = brand.logo;
+            m_img.className = "rounded-circle"
+            m_img.height = "200";
+
+            m_a.appendChild(m_img);
+
+            m_innner_td_1.appendChild(m_a);
+
+            m_inner_tr.appendChild(m_innner_td_1);
+
+            let m_innner_td_2 = document.createElement("td");
+
+            let m_h = document.createElement("h1");
+            m_h.innerHTML = " &nbsp; &nbsp;" + brand.marca;
+
+            m_innner_td_2.appendChild(m_h);
+
+            m_inner_tr.appendChild(m_innner_td_2);
+
+            m_inner_table.appendChild(m_inner_tr);
+
+            m_th.appendChild(m_inner_table);
+
+            m_tr.appendChild(m_th);
+
+            m_table.appendChild(m_tr);
+
+            m_logo.appendChild(m_table);
+
+            let inner_xhr = new XMLHttpRequest();
+            inner_xhr.open('PUT', "http://localhost:3000/api/products_display");
+            inner_xhr.setRequestHeader('Content-Type', 'application/json');
+            inner_xhr.send(JSON.stringify({"marca": marca}));
+            inner_xhr.onload = function () {
+                if (xhr.status != 200) { 
+                    console.log("No se encontraron productos.");
+                } else { 
+                    let productos = [];
+                    productos = JSON.parse(inner_xhr.responseText);
+                    let l = productos.length;
+                    let busqueda = document.getElementById("busqueda");
+                    busqueda.innerHTML = "";
+
+                    let table = document.createElement("table");
+                    table.width = "90%";
+
+                    let tr = document.createElement("tr");
+                    
+                    for(let i = 0; i < l; i++){
+                        if(i % 3 == 0){
+                            table.appendChild(tr);
+                            tr = document.createElement("tr");
+                        }
+
+                        let td = document.createElement("td");
+                        td.align = "center";
+                        //Extender
+                        let table_temp = document.createElement("table");
+                        table_temp.align = "left";
+
+                        if(productos.length >= 3)
+                            table_temp.width = "90%";
+
+                        let tr_temp = document.createElement("tr");
+
+                        let td_in_1 = document.createElement("td");
+                        td_in_1.innerHTML = "<h5>" + productos[i].nombre + "</h5><p>" + (productos[i].stock > 0? "Disponible" : "No disponible") + "</p>";
+                        tr_temp.appendChild(td_in_1);
+
+                        let td_in_2 = document.createElement("td");
+                        td_in_2.align = "right";
+                        td_in_2.innerHTML = '<a name="" id="" class="btn" href="producto" role="button"><img src="' + productos[i].imagen + '" width="200"></a>';
+                        tr_temp.appendChild(td_in_2);
+
+                        table_temp.appendChild(tr_temp);
+
+                        td.appendChild(table_temp);
+
+                        tr.appendChild(td);
+                    }
+
+                    table.appendChild(tr);
+
+                    busqueda.appendChild(table);
+                }       
+            };
+        }
+    };
 }

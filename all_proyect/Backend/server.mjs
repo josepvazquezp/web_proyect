@@ -572,18 +572,6 @@ app.get('/api/user/:token-:id-:tipo', (req, res) => {
     }
 });
 
-app.get('/api/products', (req, res) => {
-    let marca = req.body.marca;
-    let categoria = req.body.categoria;
-    
-    Product.find({
-        marca: {$regex: marca},
-        categoria: {$regex: categoria}
-    }, function (err, docs) {
-        res.send(docs);
-    });
-});
-
 app.post('/api/login', (req, res) => {
     let falta = 'Hacen falta los siguientes parámetros:';
     let mis = false;
@@ -1438,4 +1426,45 @@ app.get('/api/bazares', (req, res) => {
             res.send(docs);
         }
     });
+});
+
+app.put('/api/products_display', (req, res) => {
+    let marca = req.body.marca;
+    
+    Product.find({
+    }, function (err, docs) {
+        let temp = [];
+        for(let i = 0 ; i < docs.length ; i++) {
+            if(docs[i].marca.normalize() == marca.normalize()) {
+                temp.push(docs[i]);
+            }
+        }
+
+        res.status(200);
+        res.send(temp);
+    });
+});
+
+
+app.put('/api/marca', (req, res) => {
+    let marca = req.body.marca;
+    
+    if(marca != null) {
+        Brand.find({
+        }, function (err, docs) {
+            let temp = [];
+            for(let i = 0 ; i < docs.length ; i++) {
+                if(docs[i].marca.normalize() == marca.normalize()) {
+                    temp.push(docs[i]);
+                    break;
+                }
+            }
+
+            res.status(200);
+            res.send(temp[0]);
+        });
+    }
+    else {
+        res.sendStatus(404);
+    }
 });

@@ -203,3 +203,18 @@
 # GET http://localhost:3000/api/marcas_ropa
 
 # GET http://localhost:3000/api/bazares
+
+
+# PUT http://localhost:3000/api/products_display
+# content-type: application/json
+
+# {
+#     "marca": "BOCA DRAGÓN"
+# }
+
+# PUT http://localhost:3000/api/marca
+# content-type: application/json
+
+# {
+#     "marca": "BOCA DRAGÓN"
+# }

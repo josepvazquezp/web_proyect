@@ -17,42 +17,43 @@
   <body>
     <nav class="navbar navbar-expand-sm">
 
-        <!-- Links -->
-        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <!-- Links -->
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="home">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" onclick="showMap();" data-toggle="modal" data-target="#modalUbi"><i class="fa fa-search"></i>Ubicación</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="p_bazares">Bazares</a>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav navbar-center mr-auto mt-2 mt-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" href="info_empresa"><img src="images/logo.png" height="70" widht="35"></a>
+        </li>
+      </ul>
+      
+      <div id="show">
+        <ul class="navbar-nav navbar-right mt-2 mt-lg-0">
           <li class="nav-item">
-            <a class="nav-link" href="home">Home</a>
+            <a class="nav-link" href="#" data-toggle="modal" data-target="#modalAccount">
+              <i class="fa fa-user-circle"></i> 
+              Registrarse
+            </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#" onclick="showMap();" data-toggle="modal" data-target="#modalUbi"><i class="fa fa-search"></i>Ubicación</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="p_bazares">Bazares</a>
+            <a class="nav-link" href="#" data-toggle="modal" data-target="#modalLogin">
+                <i class="fa fa-sign-in"></i> 
+                Iniciar Sesión
+            </a>
           </li>
         </ul>
-  
-        <ul class="navbar-nav navbar-center mr-auto mt-2 mt-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" href="info_empresa"><img src="images/logo.png" height="70" widht="35"></a>
-          </li>
-        </ul>
-        
-        <div id="show">
-          <ul class="navbar-nav navbar-right mt-2 mt-lg-0">
-            <li class="nav-item">
-              <a class="nav-link" href="#" data-toggle="modal" data-target="#modalAccount">
-                <i class="fa fa-user-circle"></i> 
-                Registrarse
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" data-toggle="modal" data-target="#modalLogin">
-                  <i class="fa fa-sign-in"></i> 
-                  Iniciar Sesión
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
+      </div>
+    </nav>
+
 
 
 
