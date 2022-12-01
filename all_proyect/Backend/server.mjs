@@ -6,8 +6,16 @@ import cors from 'cors';
 import bcrypt from 'bcrypt';
 import randomatic from 'randomatic';
 
+// import url from 'url';
+// import path_import from 'path';
+
+// const _filename = url.fileURLToPath(import.meta.url);
+// const _dirname = url.fileURLToPath(new URL('.', import.meta.url));
+
 const app = express();
 const port = 3000;
+
+// app.use(express.static(_dirname));
 
 app.use(cors({
     methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH']
@@ -16,8 +24,8 @@ app.use(cors({
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.send('Raíz del sitio');
-    console.log(chalk.blue("Esto es la Práctica 3"));
+    console.log(chalk.blue("Entró a la raíz"));
+    res.sendFile(path_import.join(_dirname, '/index.html'));
 });
 
 app.listen(port, () => {
@@ -405,7 +413,7 @@ app.post('/api/products', (req, res) => {
 
                 let local_id = temp.length > 0? temp[temp.length - 1].local_id + 1 : 1;
 
-                if(docs.length == 0) {
+                if(docs != undefined) {
                     let flag = true;
                     let message = "Hace falta los siguientes parametros: ";
         
@@ -1396,7 +1404,7 @@ app.get('/api/productos/:nombre', (req, res) => {
     }
 });
 
-app.get('/api/productos_:categoria', (req, res) => {
+app.get('/api/marcas_:categoria', (req, res) => {
     let categoria = req.params.categoria;
     if(categoria != undefined){
         Brand.find({
@@ -1416,4 +1424,18 @@ app.get('/api/productos_:categoria', (req, res) => {
         console.log(chalk.red("NO SE INGRESÓ CATEGORÍA!!"));
         res.sendStatus(401);
     }
+});
+
+app.get('/api/bazares', (req, res) => {
+    Bazaar.find({
+    }, function (err, docs){
+        if(err){
+            console.log(chalk.red("NO SE ENCONTRARON BAZARES"));
+            res.sendStatus(404);
+
+        }else{
+            res.status(200);
+            res.send(docs);
+        }
+    });
 });

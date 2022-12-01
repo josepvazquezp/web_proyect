@@ -64,6 +64,14 @@ window.onload = function () {
         displayMarcas();
     }
 
+    if(actual == 'p_bazares') {
+        displayBazares();
+    }
+
+    if(actual == 'productos_marca') {
+        displayProductos();
+    }
+
     if(localStorage.getItem("product") != undefined) {
         let p = localStorage.getItem("product");
         postProduct(p);
@@ -705,7 +713,7 @@ function displayMarcas() {
     title.innerHTML = "Marcas " + categoria;
 
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', "http://localhost:3000/api/productos_" + categoria.toLowerCase());
+    xhr.open('GET', "http://localhost:3000/api/marcas_" + categoria.toLowerCase());
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send();
     xhr.onload = function () {
@@ -748,6 +756,8 @@ function displayMarcas() {
                 a.className = "btn btn-primary rounded-circle";
                 a.href = "productos_marca";
                 a.role = "button";
+                a.id = array[i].marca; 
+                a.onclick = "saveMarca(this);";
 
                 let img = document.createElement("img");
                 img.src = array[i].logo;
@@ -770,4 +780,74 @@ function displayMarcas() {
 
 function saveCat(object) {
     localStorage.setItem("categoria", object.id);
+}
+
+function displayBazares() {
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', "http://localhost:3000/api/bazares");
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send();
+    xhr.onload = function () {
+        if (xhr.status != 200) { 
+            console.log("No se encontraron bazares.");
+        } else { 
+            let array = JSON.parse(xhr.response);
+            let bazares = document.getElementById("bazares");
+            bazares.innerHTML = "";
+            
+            let table, tr;
+            for(let i = 0 ; i < array.length ; i++) {
+                if(i % 3 == 0 || i == 0) {
+                    if(i > 0) {
+                        table.appendChild(tr);
+                        bazares.appendChild(table);
+
+                        for(let j = 0 ; j < 3 ; j++) {
+                            let br = document.createElement("br");
+                            bazares.appendChild(br);
+                        }
+                    }
+
+                    table = document.createElement("table");
+                    table.width = "60%";
+                    table.align = "center";
+
+                    tr = document.createElement("tr");
+                }
+
+                let td = document.createElement("td");
+                td.align = "center";
+
+                let h = document.createElement("h5");
+                h.className = "font_art";
+                h.innerHTML = array[i].bazar;
+
+                td.appendChild(h);
+
+                let a = document.createElement("a");
+                a.className = "btn rounded-circle";
+                a.href = array[i].url;
+                a.role = "button";
+
+                let img = document.createElement("img");
+                img.src = array[i].logo;
+                img.className = "rounded-circle";
+                img.height = "150";
+
+                a.appendChild(img);
+
+                td.appendChild(a);
+                
+                tr.appendChild(td);
+            }
+
+            table.appendChild(tr);
+            bazares.appendChild(table);
+            
+        }
+    };
+}
+
+function saveMarca(object) {
+    localStorage.setItem("marca", object.id);
 }

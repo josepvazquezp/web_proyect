@@ -200,4 +200,6 @@
 
 # GET http://localhost:3000/api/productos/t
 
-# GET http://localhost:3000/api/productos_ropa
+# GET http://localhost:3000/api/marcas_ropa
+
+# GET http://localhost:3000/api/bazares

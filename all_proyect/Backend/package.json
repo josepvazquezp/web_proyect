@@ -9,6 +9,8 @@
     "fs": "^0.0.1-security",
     "http": "^0.0.1-security",
     "mongoose": "^6.7.1",
-    "randomatic": "^3.1.1"
+    "path": "^0.12.7",
+    "randomatic": "^3.1.1",
+    "url": "^0.11.0"
   }
 }
