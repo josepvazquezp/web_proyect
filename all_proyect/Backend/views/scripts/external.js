@@ -387,6 +387,32 @@ function readRegister() {
             let url_m = document.getElementById("account_insta").value;
             let categoria = document.getElementById("account_c_m").value;
 
+            categoria = Number(categoria);
+
+            switch(categoria) {
+                case 1: categoria = "hogar";
+                        break;
+                case 2: categoria = "belleza";
+                        break;
+                case 3: categoria = "calzado";
+                        break;
+                case 4: categoria = "ropa";
+                        break;
+                case 5: categoria = "joyeria";
+                        break;
+                case 6: categoria = "deporte";
+                        break;
+                case 7: categoria = "arte";
+                        break;
+                case 8: categoria = "cocina";
+                        break;
+                case 9: categoria = "bebe";
+                        break;
+                case 10: categoria = "mascotas";
+                        break;
+                default: categoria = "hogar";
+            }
+
             let user = {"nombre": nombre, 
                         "apellido": apellido, 
                         "correo": correo,

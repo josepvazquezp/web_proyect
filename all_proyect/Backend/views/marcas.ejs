@@ -441,20 +441,20 @@
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-              <form  @submit.prevent onsubmit="" class="was-validated">
+              <form  @submit.prevent onsubmit="readProduct();" class="was-validated">
                 <!-- Modal body -->
                 <div class="modal-body" id="sign2">
                   <h5>Nombre de la marca</h5>
                   <br>
                   <div class="form-group">
-                      <input type="text" class="form-control" placeholder="Nombre" required minlength="2">
+                      <input id="product_name" type="text" class="form-control" placeholder="Nombre" required minlength="2">
                   </div>
                   <div class="form-group">
-                  <input type="number" class="form-control" placeholder="Precio" required>
+                  <input id="product_price" type="number" class="form-control" placeholder="Precio" required>
                   </div>
                   <div class="form-group">
-                    <label class="text-muted" for="doc_type">Categoría:</label>               
-                    <select class="form-control pl-0" id="doc_type" name="selectFormat">
+                    <label class="text-muted" for="product_cat">Categoría:</label>               
+                    <select class="form-control pl-0" id="product_cat"" name="selectFormat">
                         <option value="1">Hogar</option>
                         <option value="2">Belleza y cuidado</option>
                         <option value="3">Calzado</option>
@@ -468,28 +468,61 @@
                     </select>
                   </div>
                   <div class="form-group">
-                    <input type="number" class="form-control" name="" id="" placeholder="Stock" required>
+                    <input type="number" class="form-control" name="" id="product_stock" placeholder="Stock" required>
                   </div>
                   <div class="form-group">
-                    <input type="text" style="height:200px;" class="form-control" name="" id="" placeholder="Descripción" required minlength="6">
-                  </div>
-                  <div class="form-group">
-                    <br>
-                    <h5>Imagen:</h5>
-                    <input type="file" id="archive" accept=".png,.jpg">
+                    <input type="text" style="height:200px;" class="form-control" name="" id="product_des" placeholder="Descripción" required minlength="6">
                   </div>
                   <br>
 
                 </div>
                 
                 <div class="modal-footer" id="login3">
-                  <button type="submit" class="btn btn-success" valign="left">Agregar</button>
+                  <button type="submit" class="btn btn-success" valign="left">Continuar</button>
                   <button type="button" class="btn btn-dark" data-dismiss="modal">Cerrar</button>
                 </div>
               </div>
             </form>
             </div>
           </div>
+
+          <div class="modal" id="modalImageP">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header" id="sign1">
+                    <h4 class="modal-title">Imagen producto</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  </div>
+                  <br>
+  
+                  <center>
+                    <table width="80%">
+                      <tr>
+                        <td>
+                          <hr clas="my-2"></hr>
+                            <h5>Inserta una imagen:</h5>
+                            <form method="POST" action="/upload" enctype="multipart/form-data">
+                              <input type="file" id="archive_p" name="file" accept=".png,.jpg">
+                              <br>
+                              <br>
+                              <button type="submit" class="btn btn-primary" onclick="readFoto();">Agregar</button>
+                            </form>
+                          <hr clas="my-2"></hr>
+                        </td>
+                      </tr>
+                    </table>
+                  <br>
+                  
+                  
+                  </center>
+        
+                  <!-- Modal body -->
+                  <div class="modal-footer" id="login3">
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">Cerrar</button>
+                  </div>  
+                </div>
+              </div>
+            </div>
 
       <br>
       <br>
