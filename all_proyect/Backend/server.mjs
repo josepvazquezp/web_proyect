@@ -1396,21 +1396,24 @@ app.get('/api/productos/:nombre', (req, res) => {
     }
 });
 
-// delete pendiente
-app.delete('/api/users', (req, res) => {
-    console.log(chalk.blue("Actualizando información..."));
+app.get('/api/productos_:categoria', (req, res) => {
+    let categoria = req.params.categoria;
+    if(categoria != undefined){
+        Brand.find({
+            categoria: {$regex: categoria}
+        }, function (err, docs){
+            if(err){
+                console.log(chalk.red("NO SE ENCONTRARON BRANDS DE ESA CATEGORÍA"));
+                res.sendStatus(404);
 
-    let id = req.body.id;
-    
-    User.findByIdAndDelete(id, (err, doc) => {
-        if(err) {
-            console.log("Error: " + err);
-            res.send(err);
-        }
-        else {
-            console.log(chalk.green("Usuario eliminado:"));
-            console.log(doc);
-            res.send(doc);
-        }
-    });
+            }else{
+                res.status(200);
+                res.send(docs);
+            }
+        });
+
+    }else{
+        console.log(chalk.red("NO SE INGRESÓ CATEGORÍA!!"));
+        res.sendStatus(401);
+    }
 });

@@ -60,6 +60,10 @@ window.onload = function () {
         displayFavoritos();
     }
 
+    if(actual == "marcas") {
+        displayMarcas();
+    }
+
     if(localStorage.getItem("product") != undefined) {
         let p = localStorage.getItem("product");
         postProduct(p);
@@ -218,7 +222,7 @@ function showNav() {
 }
 
 function logOut() {
-    localStorage.clear();
+    localStorage.removeItem("token");
     
     let busqueda = document.getElementById("busqueda");
     busqueda.innerHTML = "";
@@ -693,4 +697,77 @@ function postProduct(product) {
 
 function imageProduct() {
     localStorage.setItem("extension", extension);
+}
+
+function displayMarcas() {
+    let title = document.getElementById("t_pestana");
+    let categoria = localStorage.getItem("categoria");
+    title.innerHTML = "Marcas " + categoria;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', "http://localhost:3000/api/productos_" + categoria.toLowerCase());
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send();
+    xhr.onload = function () {
+        if (xhr.status != 200) { 
+            console.log("No se encontraron marcas.");
+        } else { 
+            let array = JSON.parse(xhr.response);
+            let marcas = document.getElementById("marcas");
+            marcas.innerHTML = "";
+            
+            let table, tr;
+            for(let i = 0 ; i < array.length ; i++) {
+                if(i % 3 == 0 || i == 0) {
+                    if(i > 0) {
+                        table.appendChild(tr);
+                        marcas.appendChild(table);
+
+                        for(let j = 0 ; j < 3 ; j++) {
+                            let br = document.createElement("br");
+                            marcas.appendChild(br);
+                        }
+                    }
+
+                    table = document.createElement("table");
+                    table.width = "98%";
+
+                    tr = document.createElement("tr");
+                }
+
+                let td = document.createElement("td");
+                td.align = "center";
+
+                let h = document.createElement("h5");
+                h.className = "font_art";
+                h.innerHTML = array[i].marca;
+
+                td.appendChild(h);
+
+                let a = document.createElement("a");
+                a.className = "btn btn-primary rounded-circle";
+                a.href = "productos_marca";
+                a.role = "button";
+
+                let img = document.createElement("img");
+                img.src = array[i].logo;
+                img.className = "rounded-circle";
+                img.height = "200";
+
+                a.appendChild(img);
+
+                td.appendChild(a);
+                
+                tr.appendChild(td);
+            }
+
+            table.appendChild(tr);
+            marcas.appendChild(table);
+            
+        }
+    };
+}
+
+function saveCat(object) {
+    localStorage.setItem("categoria", object.id);
 }
