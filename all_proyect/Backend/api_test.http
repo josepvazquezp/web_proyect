@@ -143,9 +143,6 @@
 // get usuario por correo
 # GET http://localhost:3000/api/users/jose.vazquez@iteso.mx
 
-//get todos los productos
-# GET http://localhost:3000/api/products
-
 // get token user by login
 # GET http://localhost:3000/api/login HTTP/1.1 
 # content-type: application/json
@@ -217,4 +214,19 @@
 
 # {
 #     "marca": "BOCA DRAGÓN"
+# }
+
+# PUT http://localhost:3000/api/display_producto
+# content-type: application/json
+
+# {
+#     "id": "6388e56ad74abe70b4ab63ae"
+# }
+
+# PUT http://localhost:3000/api/producto_resena HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "usuario_token": "qwertyuiop-637a5abde3f6f33d7a14317f-user",
+#     "product_id": "6388e1452e96ac15c0b0928f"
 # }

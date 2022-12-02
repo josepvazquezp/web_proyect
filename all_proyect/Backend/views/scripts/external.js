@@ -26,7 +26,12 @@ function loadLogin(urlJSON, user) {
 
             if(localStorage.getItem("token") && (actual == "" || actual == "home")) {
                 displayFavoritos();
-    }
+            }
+
+            if(actual == "producto") {
+                let temp_product = localStorage.getItem("producto_id");
+                displayProducto(temp_product);
+            }
         }
     };
 }
@@ -70,6 +75,11 @@ window.onload = function () {
 
     if(actual == 'productos_marca') {
         displayProductos();
+    }
+
+    if(actual == 'producto') {
+        let temp_product = localStorage.getItem("producto_id");
+        displayProducto(temp_product);
     }
 
     if(localStorage.getItem("product") != undefined) {
@@ -188,6 +198,7 @@ function detener() {
 
 function showNav() {
     let token = localStorage.getItem("token");
+    // alert(token);
 
     if(token == undefined) {
         show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#modalAccount"><i class="fa fa-user-circle"></i> Registrarse</a></li><li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#modalLogin"><i class="fa fa-sign-in"></i> Iniciar Sesión</a></li></ul>';   
@@ -232,11 +243,20 @@ function showNav() {
 function logOut() {
     localStorage.removeItem("token");
     
-    let busqueda = document.getElementById("busqueda");
-    busqueda.innerHTML = "";
+    let path = window.location.pathname;
+    let actual = path.split("/").pop();
 
-    let favoritos = document.getElementById("favoritos");
-    favoritos.innerHTML = "";
+    if(actual == "" || actual == "home") {
+        let busqueda = document.getElementById("busqueda");
+        busqueda.innerHTML = "";
+        let favoritos = document.getElementById("favoritos");
+        favoritos.innerHTML = "";
+    }
+
+    if(actual == "producto") {
+        let temp_product = localStorage.getItem("producto_id");
+        displayProducto(temp_product);
+    }
 
     showNav();
 }
@@ -956,7 +976,7 @@ function displayProductos() {
 
                         let td_in_2 = document.createElement("td");
                         td_in_2.align = "right";
-                        td_in_2.innerHTML = '<a name="" id="" class="btn" href="producto" role="button"><img src="' + productos[i].imagen + '" width="200"></a>';
+                        td_in_2.innerHTML = '<a name="" id="' + productos[i]._id + '" class="btn" href="producto" role="button" onclick="saveProducto(this);"><img src="' + productos[i].imagen + '" width="200"></a>';
                         tr_temp.appendChild(td_in_2);
 
                         table_temp.appendChild(tr_temp);
@@ -973,4 +993,201 @@ function displayProductos() {
             };
         }
     };
+}
+
+function saveProducto(object) {
+    localStorage.setItem("producto_id", object.id);
+}
+
+function displayProducto(id) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('PUT', "http://localhost:3000/api/display_producto");
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({"id": id}));
+    xhr.onload = function () {
+        if (xhr.status != 200) { 
+            console.log("No se encontro la marca.");
+        } else {
+            let producto = JSON.parse(xhr.response);
+
+            let title = document.getElementById("t_pestana");
+            title.innerHTML = "Producto " + producto.nombre;
+
+            let producto_d = document.getElementById("producto_d");
+            producto_d.innerHTML = "";
+            
+            let table = document.createElement("table");
+            table.width ="80%";
+            
+            let tr = document.createElement("tr");
+
+            let td = document.createElement("td");
+
+            let inner_table = document.createElement("table");
+            inner_table.width ="90%";
+
+            let inner_tr = document.createElement("tr");
+
+            let inner_td_1 = document.createElement("td");
+
+            let img = document.createElement("img");
+            img.src = producto.imagen;
+            img.width = "500";
+
+            inner_td_1.appendChild(img);
+
+            inner_tr.appendChild(inner_td_1);
+
+            let inner_td_2 = document.createElement("td");
+            inner_td_2.valign="top";
+
+            let h_1 = document.createElement("h1");
+
+            let temp_name = "";
+            for(let i = 0, ac = 0 ; i < producto.nombre.length ; i++) {
+                if(producto.nombre[i] == " ") {
+                    ac++;
+                }
+
+                if(ac == 2) {
+                    temp_name += "<br>";
+                    i++;
+                    ac = 0;
+                }
+
+                temp_name += producto.nombre[i];
+            }
+
+            h_1.innerHTML = temp_name;
+
+            inner_td_2.appendChild(h_1);
+
+            let br = document.createElement("br");
+            inner_td_2.appendChild(br);
+
+            let h_3 = document.createElement("h3");
+            
+            let inner_t = document.createElement("table");
+            let inner_t_tr = document.createElement("tr");
+            let inner_t_td_1 = document.createElement("td");
+
+            let inner_img = document.createElement("img");
+            inner_img.src = producto.logo;
+            inner_img.className = "rounded-circle";
+            inner_img.height = "50";
+            
+            inner_t_td_1.appendChild(inner_img);
+
+            inner_t_tr.appendChild(inner_t_td_1);
+
+            let inner_t_td_2 = document.createElement("td");
+
+            let inner_h_3 = document.createElement("h3");
+            inner_h_3.innerHTML = " &nbsp; &nbsp;" + producto.marca;
+
+            inner_t_td_2.appendChild(inner_h_3);
+
+            inner_t_tr.appendChild(inner_t_td_2);
+
+            inner_t.appendChild(inner_t_tr);
+
+            h_3.appendChild(inner_t);
+
+            inner_td_2.appendChild(h_3);
+
+            br = document.createElement("br");
+            inner_td_2.appendChild(br);
+
+            br = document.createElement("br");
+            inner_td_2.appendChild(br);
+
+            let p = document.createElement("p");
+            p.innerHTML = producto.descripcion;
+
+            inner_td_2.appendChild(p);
+
+            br = document.createElement("br");
+            inner_td_2.appendChild(br);
+
+            br = document.createElement("br");
+            inner_td_2.appendChild(br);
+
+            let h_2 = document.createElement("h2");
+            h_2.innerHTML = producto.precio;
+
+            inner_td_2.appendChild(h_2);
+
+            br = document.createElement("br");
+            inner_td_2.appendChild(br);
+
+            let h_5 = document.createElement("h5");
+            h_5.innerHTML = producto.stock > 0? "Disponible" : "No disponible";
+
+            inner_td_2.appendChild(h_5);
+
+            br = document.createElement("br");
+            inner_td_2.appendChild(br);
+
+            br = document.createElement("br");
+            inner_td_2.appendChild(br);
+
+            br = document.createElement("br");
+            inner_td_2.appendChild(br);
+
+            if(localStorage.getItem("token") && producto.stock > 0) {
+                let in_in_t = document.createElement("table");
+                in_in_t.width = "60%";
+
+                let in_in_tr = document.createElement("tr");
+
+                let in_in_td_1 = document.createElement("td");
+
+                let in_in_btn_1 = document.createElement("button");
+                in_in_btn_1.type = "button";
+                in_in_btn_1.className = "btn btn-primary";
+                in_in_btn_1.addEventListener("click", apartar);
+                in_in_btn_1.innerHTML = "Apartar";
+
+                in_in_td_1.appendChild(in_in_btn_1);
+
+                in_in_tr.appendChild(in_in_td_1);
+
+                let in_in_td_2 = document.createElement("td");
+
+                let in_in_btn_2 = document.createElement("button");
+                in_in_btn_2.type = "button";
+                in_in_btn_2.className = "btn btn-primary";
+                in_in_btn_2.addEventListener("click", addCarrito);
+                in_in_btn_2.innerHTML = '<i class="fa fa-shopping-cart" aria-hidden="true"></i> +';
+
+                in_in_td_2.appendChild(in_in_btn_2);
+
+                in_in_tr.appendChild(in_in_td_2);
+
+                in_in_t.appendChild(in_in_tr);
+
+                inner_td_2.appendChild(in_in_t);
+            }
+
+            inner_tr.appendChild(inner_td_2);
+
+            inner_table.appendChild(inner_tr);
+
+            td.appendChild(inner_table);
+
+            tr.appendChild(td);
+
+            table.appendChild(tr);
+
+            producto_d.appendChild(table);
+        }
+    };
+}
+
+function apartar() {
+    alert('Producto apartado\nRECUERDA: Tienes 48 horas para recoger el producto.');
+}
+
+function addCarrito() {
+    alert('Producto agregado al carrito.');
 }

@@ -1468,3 +1468,109 @@ app.put('/api/marca', (req, res) => {
         res.sendStatus(404);
     }
 });
+
+app.put('/api/display_producto', (req, res) => {
+    let id = req.body.id;
+    
+    if(id == undefined) {
+        res.sendStatus(400);
+    }
+    else{
+        Product.findById(id, (err, docs) => {
+            if(err) {
+                console.log("Error: " + err);
+                res.sendStatus(400);
+            }
+            else {
+                res.status(200);
+                res.send(docs);
+            }
+        });
+    }
+});
+
+
+app.put('/api/producto_resena', (req, res) => {
+    let usuario_token = req.body.usuario_token;
+    let product_id = req.body.product_id;
+    
+    if(product_id == undefined || usuario_token == undefined) {
+        res.sendStatus(400);
+    }
+    else{
+        let id_token, index;
+
+        for(let i = 11 ; usuario_token[i] != '-' ; i++) {
+            index = i;
+        }
+
+        id_token = usuario_token.substring(11, index + 1);
+
+        let tipo = usuario_token.substring(index + 2, usuario_token.length);
+
+        if(tipo == "user") {
+            User.findById(id_token, (err, docs) => {
+                if(err) {
+                    console.log("Error: " + err);
+                    res.sendStatus(400);
+                }
+                else {
+                    let flag = false;
+
+                    for(let i = 0 ; i < docs.historial.length ; i++) {
+                        if(docs.historial[i] == product_id) {
+                            flag = true;
+                        }
+                    }
+
+                    res.status(200);
+                    res.send(flag);
+                }
+            });
+        }
+        else if(tipo == "marca") {
+            Brand.findById(id_token, (err, docs) => {
+                if(err) {
+                    console.log("Error: " + err);
+                    res.sendStatus(400);
+                }
+                else {
+                    let flag = false;
+
+                    for(let i = 0 ; i < docs.historial.length ; i++) {
+                        if(docs.historial[i] == product_id) {
+                            flag = true;
+                        }
+                    }
+
+                    res.status(200);
+                    res.send(flag);
+                }
+            });
+        }
+        else if(tipo == "bazar") {
+            Bazaar.findById(id_token, (err, docs) => {
+                if(err) {
+                    console.log("Error: " + err);
+                    res.sendStatus(400);
+                }
+                else {
+                    let flag = false;
+
+                    for(let i = 0 ; i < docs.historial.length ; i++) {
+                        if(docs.historial[i] == product_id) {
+                            flag = true;
+                        }
+                    }
+
+                    res.status(200);
+                    res.send(flag);
+                }
+            });
+        }
+        else {
+            res.sendStatus(400);
+        }
+        
+    }
+});
