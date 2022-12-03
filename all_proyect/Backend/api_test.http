@@ -85,7 +85,7 @@
 
 # {
 #     "usuario_token": "qwertyuiop-637a5abde3f6f33d7a14317f-user",
-#     "imagen": "images/r2_p1.jpg"
+#     "product_id": "6388e1452e96ac15c0b0928f"
 # }
 
 // Post carrito marca
@@ -248,3 +248,18 @@
 # }
 
 # GET http://localhost:3000/api/doubt/638ab4cd52a142c570ecb497
+
+# PUT http://localhost:3000/api/producto_reviews HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "product_id": "6388e1452e96ac15c0b0928f"
+# }
+
+# DELETE http://localhost:3000/api/carrito HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "usuario_token": "qwertyuiop-638917e6884c4e1237c0d1a2-marca",
+#     "product_id": "63891951884c4e1237c0d1c4"
+# }

@@ -198,7 +198,6 @@ function detener() {
 
 function showNav() {
     let token = localStorage.getItem("token");
-    // alert(token);
 
     if(token == undefined) {
         show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#modalAccount"><i class="fa fa-user-circle"></i> Registrarse</a></li><li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#modalLogin"><i class="fa fa-sign-in"></i> Iniciar Sesión</a></li></ul>';   
@@ -225,14 +224,14 @@ function showNav() {
                 flag_user = true;
 
                 if(user.tipo == 'marca') {
-                    show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><table width="100%"><tr><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalProduct"><i class="fa fa-upload" aria-hidden="true"></i> Agregar producto</a></li></td><td><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.marca + '&nbsp; &nbsp;<img class="rounded-circle" src="' + user.logo + '" height="30" widht="15"></a><div class="dropdown-menu" aria-labelledby="navbarDropdown2"><a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalFoto">Cambiar foto de perfil</a><a class="dropdown-item" href="#" onclick="logOut();">Cerrar sesión</a></div></li></td><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalShop"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li></td></tr></table></li></ul>';
+                    show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><table width="100%"><tr><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalProduct"><i class="fa fa-upload" aria-hidden="true"></i> Agregar producto</a></li></td><td><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.marca + '&nbsp; &nbsp;<img class="rounded-circle" src="' + user.logo + '" height="30" widht="15"></a><div class="dropdown-menu" aria-labelledby="navbarDropdown2"><a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalFoto">Cambiar foto de perfil</a><a class="dropdown-item" href="#" onclick="logOut();">Cerrar sesión</a></div></li></td><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalShop" onclick="displayCarrito();"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li></td></tr></table></li></ul>';
                 }
                 else if(user.tipo == 'bazar') {
-                    show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><table width="100%"><tr><td><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.bazar + '&nbsp; &nbsp;<img class="rounded-circle" src="' + user.logo + '" height="30" widht="15"></a><div class="dropdown-menu" aria-labelledby="navbarDropdown2"><a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalFoto">Cambiar foto de perfil</a><a class="dropdown-item" href="#" onclick="logOut();">Cerrar sesión</a></div></li></td><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalShop"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li></td></tr></table></li></ul>'; 
+                    show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><table width="100%"><tr><td><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.bazar + '&nbsp; &nbsp;<img class="rounded-circle" src="' + user.logo + '" height="30" widht="15"></a><div class="dropdown-menu" aria-labelledby="navbarDropdown2"><a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalFoto">Cambiar foto de perfil</a><a class="dropdown-item" href="#" onclick="logOut();">Cerrar sesión</a></div></li></td><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalShop" onclick="displayCarrito();"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li></td></tr></table></li></ul>'; 
                 }
                 else if(user.tipo == 'user') {
                     user.imagen = user.imagen == null? "images/kirby_logo.png" : user.imagen;
-                    show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><table width="100%"><tr><td><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.correo + '&nbsp; &nbsp;<img class="rounded-circle" src="' + user.imagen + '" height="30" widht="15"></a><div class="dropdown-menu" aria-labelledby="navbarDropdown2"><a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalFoto">Cambiar foto de perfil</a><a class="dropdown-item" href="#" onclick="logOut();">Cerrar sesión</a></div></li></td><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalShop"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li></td></tr></table></li></ul>';
+                    show.innerHTML = '<ul class="navbar-nav navbar-right mt-2 mt-lg-0"><li class="nav-item"><table width="100%"><tr><td><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.correo + '&nbsp; &nbsp;<img class="rounded-circle" src="' + user.imagen + '" height="30" widht="15"></a><div class="dropdown-menu" aria-labelledby="navbarDropdown2"><a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalFoto">Cambiar foto de perfil</a><a class="dropdown-item" href="#" onclick="logOut();">Cerrar sesión</a></div></li></td><td><li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false"  data-toggle="modal" data-target="#modalShop" onclick="displayCarrito();"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li></td></tr></table></li></ul>';
                 }
             }
         };
@@ -1343,6 +1342,8 @@ function displayProducto(id) {
             m_review.appendChild(table);
 
             displayDudas();
+            
+            displayReviews();
 
             if(localStorage.getItem("token")) {
                 let xhr = new XMLHttpRequest();
@@ -1483,11 +1484,31 @@ function displayProducto(id) {
 }
 
 function apartar() {
-    alert('Producto apartado\nRECUERDA: Tienes 48 horas para recoger el producto.');
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', "http://localhost:3000/api/apartar");
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({"usuario_token": localStorage.getItem("token"), "product_id": localStorage.getItem("producto_id")}));
+    xhr.onload = function () {
+        if (xhr.status != 200) { 
+            console.log("Un parametro esta mal.");
+        } else { 
+            alert('Producto apartado\nRECUERDA: Tienes 48 horas para recoger el producto.');
+        }
+    };
 }
 
 function addCarrito() {
-    alert('Producto agregado al carrito.');
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', "http://localhost:3000/api/carrito");
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({"usuario_token": localStorage.getItem("token"), "product_id": localStorage.getItem("producto_id")}));
+    xhr.onload = function () {
+        if (xhr.status != 200) { 
+            console.log("Un parametro esta mal.");
+        } else { 
+            alert('Producto agregado al carrito.');
+        }
+    };
 }
 
 function readChat() {
@@ -1524,6 +1545,7 @@ function readReview() {
             console.log("Un parametro esta mal.");
         } else { 
             alert("Reseña enviada");
+            displayReviews();
         }
     };
 }
@@ -1554,8 +1576,14 @@ function displayDudas() {
                 } else {
                     let dudas = JSON.parse(xhr.response);
         
-                    let display_dudas = document.getElementById("display_d_r");
+                    let display_dudas = document.getElementById("display_doubts");
                     display_dudas.innerHTML = "";
+
+                    let global_table = document.createElement("table");
+
+                    let global_tr = document.createElement("tr");
+
+                    let global_td_1 = document.createElement("td");
         
                     let table = document.createElement("table");
         
@@ -1630,7 +1658,7 @@ function displayDudas() {
 
                                 let backup_table;
 
-                                if(flag_login && dudas[i].respuesta.length == 0) {
+                                if(flag_login) {
                                     let backup_td_2 = inner_td_2.cloneNode(true);
                                     let backup_tr_2 = inner_tr_2.cloneNode(true);
                                     let backup_table_2 = inner_table.cloneNode(true);
@@ -1672,8 +1700,14 @@ function displayDudas() {
                                 tr.appendChild(td);
         
                                 table.appendChild(tr);
-        
-                                display_dudas.appendChild(table);
+                                
+                                global_td_1.appendChild(table);
+
+                                global_tr.appendChild(global_td_1);
+
+                                global_table.appendChild(global_tr);
+
+                                display_dudas.appendChild(global_table);
         
                                 if(dudas[i].respuesta != undefined) {
                                     for(let j = 0 ; j < dudas[i].respuesta.length ; j++) {
@@ -1795,8 +1829,14 @@ function displayDudas() {
                                                         tr.appendChild(td);
                 
                                                         table.appendChild(tr);
+
+                                                        global_td_1.appendChild(table);
+
+                                                        global_tr.appendChild(global_td_1);
+
+                                                        global_table.appendChild(global_tr);
         
-                                                        display_dudas.appendChild(table);
+                                                        display_dudas.appendChild(global_table);
                                                     }
                                                 };
                                             } 
@@ -1923,4 +1963,239 @@ function readResponse(object) {
             displayDudas();
         }
     };
+}
+
+function displayReviews() {  
+    let xhr = new XMLHttpRequest();
+    xhr.open('PUT', "http://localhost:3000/api/producto_reviews");
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({"product_id": localStorage.getItem("producto_id")}));
+    xhr.onload = function () {
+        if (xhr.status != 200) { 
+            console.log("Un parametro esta mal.");
+        } else {
+            let reviews = JSON.parse(xhr.response);
+
+            let display_reviews = document.getElementById("display_reviews");
+            display_reviews.innerHTML = "";
+
+            let global_table = document.createElement("table");
+
+            let global_tr = document.createElement("tr");
+
+            let global_td_2 = document.createElement("td");
+
+            let table = document.createElement("table");
+
+            for(let i = 0 ; i < reviews.length ; i++) {
+                let url_temp = "http://localhost:3000/api/user/" + reviews[i].usuario_token;
+                let xhr = new XMLHttpRequest();
+                xhr.open('GET', url_temp);
+                xhr.send();
+                xhr.onload = function () {
+                    if (xhr.status != 200) { 
+                        alert("Hubo un error intenta más tarde.");
+                    } 
+                    else {
+                        let user = JSON.parse(xhr.response);
+
+                        let tr = document.createElement("tr");
+
+                        let td = document.createElement("td");
+
+                        let inner_table = document.createElement("table");
+                        
+                        let inner_tr_1 = document.createElement("tr");
+
+                        let inner_td_1 = document.createElement("td");
+                        inner_td_1.width = "5%";
+
+                        let img = document.createElement("img");
+                        img.className = "rounded-circle";
+                        img.src = user.imagen == undefined? user.logo : user.imagen;
+                        img.height = "30";
+
+                        inner_td_1.appendChild(img);
+
+                        inner_tr_1.appendChild(inner_td_1);
+                        
+                        let inner_td_2 = document.createElement("td");
+
+                        let inner_h4 = document.createElement("h4");
+
+                        if(user.bazar != undefined) {
+                            inner_h4.innerHTML = user.bazar + ' <br> <span class="fa fa-star' + reviews[i].estrellas > 0? 'checked' : '' + '"></span><span class="fa fa-star' + reviews[i].estrellas > 1? 'checked' : '' + '"></span><span class="fa fa-star' + reviews[i].estrellas > 2? 'checked' : '' + '"></span><span class="fa fa-star' + reviews[i].estrellas > 3? 'checked' : '' + '"></span><span class="fa fa-star' + reviews[i].estrellas > 4? 'checked' : '' + '"></span>';
+                        }
+                        else if(user.marca != undefined) {
+                            inner_h4.innerHTML = user.marca;
+                        }
+                        else {
+                            inner_h4.innerHTML = user.nombre + " <br> <span class='fa fa-star" + (Number(reviews[i].estrellas) > 0? " checked" : "") + "'></span><span class='fa fa-star" + (Number(reviews[i].estrellas) > 1? " checked" : "") + "'></span><span class='fa fa-star" + (Number(reviews[i].estrellas) > 2? " checked" : "") + "'></span><span class='fa fa-star" + (Number(reviews[i].estrellas) > 3? " checked" : "") + "'></span><span class='fa fa-star" + (Number(reviews[i].estrellas) > 4? " checked" : "") + "'></span>";;
+                        }
+
+                        inner_td_2.appendChild(inner_h4);
+
+                        inner_tr_1.appendChild(inner_td_2);
+
+                        inner_table.appendChild(inner_tr_1);
+
+                        let inner_tr_2 = document.createElement("tr");
+                        
+                        inner_td_1 = document.createElement("td");
+
+                        inner_tr_2.appendChild(inner_td_1);
+
+                        inner_td_2 = document.createElement("td");
+
+                        let p = document.createElement("p");
+                        p.innerHTML = reviews[i].reseña;
+
+                        inner_td_2.appendChild(p);
+
+                        let br = document.createElement("br");
+
+                        inner_td_2.appendChild(br);
+
+                        inner_tr_2.appendChild(inner_td_2);
+
+                        inner_table.appendChild(inner_tr_2);
+
+                        td.appendChild(inner_table);
+
+                        tr.appendChild(td);
+
+                        table.appendChild(tr);
+                        
+                        global_td_2.appendChild(table);
+
+                        global_tr.appendChild(global_td_2);
+
+                        global_table.appendChild(global_tr);
+
+                        display_reviews.appendChild(global_table);
+                    }
+                };
+            } 
+        }
+    };  
+}
+
+function displayCarrito() {
+    let url_temp = "http://localhost:3000/api/user/" + localStorage.getItem("token");
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', url_temp);
+    xhr.send();
+    xhr.onload = function () {
+        if (xhr.status != 200) { 
+            alert("Hubo un error intenta más tarde.");
+        } 
+        else {
+            let user = JSON.parse(xhr.responseText);
+
+            alert(xhr.responseText);
+
+            let carrito = user.carrito;
+
+            let display_carrito = document.getElementById("products_carrito");
+            display_carrito.innerHTML = "";
+
+            for(let i = 0 ; carrito.length ; i++) {
+                xhr = new XMLHttpRequest();
+                xhr.open('PUT', url_temp);
+                xhr.send(JSON.stringify({"id": carrito[i]}));
+                xhr.onload = function () {
+                    if (xhr.status != 200) { 
+                        alert("Hubo un error intenta más tarde.");
+                    } 
+                    else {
+                        let product = JSON.parse(xhr.response);
+
+                        let tr = document.createElement("tr");
+
+                        let td = document.createElement("tr");
+
+                        let hr = document.createElement("hr");
+                        hr.className = "my-2";
+
+                        td.appendChild(hr);
+
+                        let inner_table = document.createElement("table");
+
+                        let inner_tr = document.createElement("tr");
+
+                        let inner_td_1 = document.createElement("td");
+
+                        let inner_img = document.createElement("img");
+                        inner_img.src = product.imagen;
+                        inner_img.width = "160";
+
+                        inner_td_1.appendChild(inner_img);
+
+                        inner_tr.appendChild(inner_td_1);
+
+                        let inner_td_2 = document.createElement("td");
+                        inner_td_2.align = "center";
+                        
+                        let inner_h2 = document.createElement("h2");
+                        inner_h2.innerHTML = product.nombre;
+
+                        inner_td_2.appendChild(inner_h2);
+
+                        let inner_br = document.createElement("br");
+                        
+                        inner_td_2.appendChild(inner_br);
+
+                        let in_in_table = document.createElement("table");
+                        in_in_table.width = "70%";
+
+                        let in_in_tr = document.createElement("tr");
+
+                        let in_in_td_1 = document.createElement("td");
+
+                        let in_in_h3 = document.createElement("h3");
+                        in_in_h3.innerHTML = "$ " + product.precio;
+
+                        in_in_td_1.appendChild(in_in_h3);
+
+                        in_in_tr.appendChild(in_in_td_1);
+
+                        let in_in_td_2 = document.createElement("td");
+
+                        let in_in_btn = document.createElement("button");
+                        in_in_btn.type = "button";
+                        in_in_btn.className = "btn vtn-danger";
+                        in_in_btn.addEventListener("click",deleteCarrito);
+                        in_in_btn.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i>';
+
+                        in_in_td_2.appendChild(in_in_btn);
+
+                        in_in_tr.appendChild(in_in_td_2);
+
+                        in_in_table.appendChild(in_in_tr);
+
+                        inner_td_2.appendChild(inner_table);
+
+                        inner_tr.appendChild(inner_td_2);
+
+                        inner_table.appendChild(inner_tr);
+
+                        td.appendChild(inner_table);
+
+                        hr = document.createElement("hr");
+                        hr.className = "my-2";
+
+                        td.appendChild(hr);
+
+                        tr.appendChild(td);
+
+                        display_carrito.appendChild(tr);
+                    }
+                };
+            }
+        }
+    };
+}
+
+function deleteCarrito() {
+    alert("Eliminar producto.");
 }

@@ -756,7 +756,7 @@ app.post('/api/reviews', (req, res) => {
                     res.send("Usuario invalido para agregar producto.");
                 }
                 else {
-                    let newReview = {usuario_token: id_token, estrellas: estrellas, reseña: reseña};
+                    let newReview = {usuario_token: complete_token, estrellas: estrellas, reseña: reseña};
                     let review = Review(newReview);
                     review.save().then((doc) => {
                         console.log(chalk.green("Reseña creada: ") + doc);
@@ -789,9 +789,9 @@ app.post('/api/reviews', (req, res) => {
 
 app.post('/api/carrito', (req, res) => {
     let complete_token = req.body.usuario_token;
-    let imagen = req.body.imagen;
+    let product_id = req.body.product_id;
     
-    if(complete_token == undefined || imagen == undefined) {
+    if(complete_token == undefined || product_id == undefined) {
         res.sendStatus(400);
     }
     else {
@@ -804,10 +804,8 @@ app.post('/api/carrito', (req, res) => {
         id_token = complete_token.substring(11, index + 1);
         let tipo = complete_token.substring(index + 2, complete_token.length);
 
-        Product.find({
-            imagen: {$regex: imagen}
-        }, function (err, docs) {
-            let temp = docs[0];
+        Product.findById(product_id, (err, docs) => {
+            let temp = docs;
 
             if(temp == undefined || temp.stock == 0) {
                 res.status(400);
@@ -965,9 +963,9 @@ app.post('/api/carrito', (req, res) => {
 
 app.post('/api/apartar', (req, res) => {
     let complete_token = req.body.usuario_token;
-    let imagen = req.body.imagen;
+    let product_id = req.body.product_id;
     
-    if(complete_token == undefined || imagen == undefined) {
+    if(complete_token == undefined || product_id == undefined) {
         res.sendStatus(400);
     }
     else {
@@ -979,10 +977,8 @@ app.post('/api/apartar', (req, res) => {
 
         id_token = complete_token.substring(11, id_token + 1);
 
-        Product.find({
-            imagen: {$regex: imagen}
-        }, function (err, docs) {
-            let temp = docs[0];
+        Product.findById(product_id, (err, docs) => {
+            let temp = docs;
 
             if(temp == undefined || temp.stock == 0) {
                 res.status(400);
@@ -1706,4 +1702,218 @@ app.get('/api/doubt/:doubt_id', (req, res) => {
             }
         });
     }
+});
+
+app.put('/api/producto_reviews', (req, res) => {
+    let product_id = req.body.product_id;
+    
+    if(product_id == undefined) {
+        res.sendStatus(400);
+    }
+    else {
+        Product.findById(product_id, (err, docs) => {
+            if(err) {
+                console.log("Error: " + err);
+                res.sendStatus(400);
+            }
+            else {
+                let reviews_ids = docs.reseñas;
+                let reviews = [];
+
+                for(let i = 0 ; i < reviews_ids.length ; i++) {
+                    Review.findById(reviews_ids[i], (err, docs) => {
+                        if(err) {
+                            console.log("Error: " + err);
+                            res.sendStatus(400);
+                        }
+                        else {
+                            reviews.push(docs);
+
+                            if(reviews.length == reviews_ids.length) {
+                                res.status(200);
+                                res.send(reviews);                                
+                            }
+                        }
+                    });           
+                }
+            }
+        });
+    }
+});
+
+app.delete('/api/carrito', (req, res) => {
+    let complete_token = req.body.usuario_token;
+    let product_id = req.body.product_id;
+    
+    if(complete_token == undefined || product_id == undefined) {
+        res.sendStatus(400);
+    }
+    else {
+        let id_token, index;
+
+        for(let i = 11 ; complete_token[i] != '-' ; i++) {
+            index = i;
+        }
+
+        id_token = complete_token.substring(11, index + 1);
+        let tipo = complete_token.substring(index + 2, complete_token.length);
+
+        Product.findById(product_id, (err, docs) => {
+            let temp = docs;
+
+            if(temp == undefined) {
+                res.status(400);
+                res.send("Usuario invalido para agregar a carrito.");
+            }
+            else {
+                if(tipo == 'user') {
+                    User.findById(id_token, (err, docs) => {
+                        if(err) {
+                            console.log("Error: " + err);
+                            res.send(err);
+                        }
+                        else {
+                            let user = docs;
+    
+                            temp.stock += 1;
+                            
+                            Product.findByIdAndUpdate(temp.id, temp, {new: true}, (err, doc) => {
+                                if(err) {
+                                    console.log("Error: " + err);
+                                    res.send(err);
+                                }
+                                else {
+                                    console.log(chalk.green("Producto actualizado:"));
+                                    console.log(doc); 
+                                    
+                                    let index = user.carrito.findIndex(item => item == product_id);
+
+                                    if(index != -1) {
+                                        user.carrito.splice(index, 1);
+
+                                        if(user.tipo == 'user') {
+                                            User.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
+                                                if(err) {
+                                                    console.log("Error: " + err);
+                                                    res.send(err);
+                                                }
+                                                else {
+                                                    console.log(chalk.green("Usuario actualizado:"));
+                                                    console.log(doc);
+                                                    res.status(200);
+                                                    res.send(doc);
+                                                }
+                                            });
+                                        }
+                                        else {
+                                            res.sendStatus(400);
+                                        }
+                                    }     
+                                }
+                            });
+                        }
+                    });
+                }
+                else if(tipo == 'marca') {
+                    Brand.findById(id_token, (err, docs) => {
+                        if(err) {
+                            console.log("Error: " + err);
+                            res.send(err);
+                        }
+                        else {
+                            let user = docs;
+    
+                            temp.stock += 1;
+                            
+                            Product.findByIdAndUpdate(temp.id, temp, {new: true}, (err, doc) => {
+                                if(err) {
+                                    console.log("Error: " + err);
+                                    res.send(err);
+                                }
+                                else {
+                                    console.log(chalk.green("Producto actualizado:"));
+                                    console.log(doc); 
+                                    
+                                    let index = user.carrito.findIndex(item => item == product_id);
+
+                                    if(index != -1) {
+                                        user.carrito.splice(index, 1);
+
+                                        if(user.tipo == 'marca') {
+                                            Brand.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
+                                                if(err) {
+                                                    console.log("Error: " + err);
+                                                    res.send(err);
+                                                }
+                                                else {
+                                                    console.log(chalk.green("Brand actualizada:"));
+                                                    console.log(doc);
+                                                    res.status(200);
+                                                    res.send(doc);
+                                                }
+                                            });
+                                        }
+                                        else {
+                                            res.sendStatus(400);
+                                        }
+                                    }     
+                                }
+                            });
+                        }
+                    });
+                }
+                else if(tipo == 'bazar') {
+                    Baza.findById(id_token, (err, docs) => {
+                        if(err) {
+                            console.log("Error: " + err);
+                            res.send(err);
+                        }
+                        else {
+                            let user = docs;
+    
+                            temp.stock += 1;
+                            
+                            Product.findByIdAndUpdate(temp.id, temp, {new: true}, (err, doc) => {
+                                if(err) {
+                                    console.log("Error: " + err);
+                                    res.send(err);
+                                }
+                                else {
+                                    console.log(chalk.green("Producto actualizado:"));
+                                    console.log(doc); 
+                                    
+                                    let index = user.carrito.findIndex(item => item == product_id);
+
+                                    if(index != -1) {
+                                        user.carrito.splice(index, 1);
+
+                                        if(user.tipo == 'bazar') {
+                                            Bazaar.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
+                                                if(err) {
+                                                    console.log("Error: " + err);
+                                                    res.send(err);
+                                                }
+                                                else {
+                                                    console.log(chalk.green("Bazar actualizado:"));
+                                                    console.log(doc);
+                                                    res.status(200);
+                                                    res.send(doc);
+                                                }
+                                            });
+                                        }
+                                        else {
+                                            res.sendStatus(400);
+                                        }
+                                    }     
+                                }
+                            });
+                        }
+                    });
+                } 
+                else {
+                    res.sendStatus(400);
+                }
+            }
+        });
+    } 
 });
