@@ -1113,7 +1113,7 @@ function displayProducto(id) {
             inner_td_2.appendChild(br);
 
             let h_2 = document.createElement("h2");
-            h_2.innerHTML = producto.precio;
+            h_2.innerHTML = "$ " + producto.precio;
 
             inner_td_2.appendChild(h_2);
 
@@ -1180,6 +1180,302 @@ function displayProducto(id) {
             table.appendChild(tr);
 
             producto_d.appendChild(table);
+
+            let m_chat = document.getElementById("chat_display");
+            m_chat.innerHTML = "";
+
+            table = document.createElement("table");
+            table.width = "90%";
+
+            tr = document.createElement("tr");
+
+            td = document.createElement("td");
+
+            inner_table = document.createElement("table");
+
+            inner_tr = document.createElement("tr");
+
+            inner_td_1 = document.createElement("td");
+
+            inner_img = document.createElement("img");
+            inner_img.src = producto.imagen;
+            inner_img.width = "150";
+
+            inner_td_1.appendChild(inner_img);
+
+            inner_tr.appendChild(inner_td_1);
+
+            inner_td_2 = document.createElement("td");
+            inner_td_2.align = "center";
+
+            let inner_h_2 = document.createElement("h2");
+            inner_h_2.innerHTML = producto.nombre;
+
+            inner_td_2.appendChild(inner_h_2);
+
+            br = document.createElement("br");
+
+            inner_td_2.appendChild(br);
+
+            inner_h_3 = document.createElement("h3");
+
+            in_in_t = document.createElement("table");
+
+            in_in_tr = document.createElement("tr");
+
+            in_in_td_1 = document.createElement("td");
+
+            in_in_img = document.createElement("img");
+            in_in_img.src = producto.logo;
+            in_in_img.className = "rounded-circle";
+            in_in_img.height = "40";
+
+            in_in_td_1.appendChild(in_in_img);
+
+            in_in_tr.appendChild(in_in_td_1);
+
+            in_in_td_2 = document.createElement("td");
+
+            let in_in_h_3 = document.createElement("h3");
+            in_in_h_3.innerHTML = " &nbsp;" + producto.marca;
+
+            in_in_td_2.appendChild(in_in_h_3);
+
+            in_in_tr.appendChild(in_in_td_2);
+
+            in_in_t.appendChild(in_in_tr);
+
+            inner_h_3.appendChild(in_in_t);
+
+            inner_td_2.appendChild(inner_h_3);
+
+            inner_tr.appendChild(inner_td_2);
+
+            inner_table.appendChild(inner_tr);
+
+            td.appendChild(inner_table);
+
+            tr.appendChild(td);
+
+            table.appendChild(tr);
+
+            m_chat.appendChild(table);
+
+
+            let m_review = document.getElementById("resena_display");
+            m_review.innerHTML = "";
+
+            table = document.createElement("table");
+            table.width = "90%";
+
+            tr = document.createElement("tr");
+
+            td = document.createElement("td");
+
+            inner_table = document.createElement("table");
+
+            inner_tr = document.createElement("tr");
+
+            inner_td_1 = document.createElement("td");
+
+            inner_img = document.createElement("img");
+            inner_img.src = producto.imagen;
+            inner_img.width = "150";
+
+            inner_td_1.appendChild(inner_img);
+
+            inner_tr.appendChild(inner_td_1);
+
+            inner_td_2 = document.createElement("td");
+            inner_td_2.align = "center";
+
+            inner_h_2 = document.createElement("h2");
+            inner_h_2.innerHTML = producto.nombre;
+
+            inner_td_2.appendChild(inner_h_2);
+
+            br = document.createElement("br");
+
+            inner_td_2.appendChild(br);
+
+            inner_h_3 = document.createElement("h3");
+
+            in_in_t = document.createElement("table");
+
+            in_in_tr = document.createElement("tr");
+
+            in_in_td_1 = document.createElement("td");
+
+            in_in_img = document.createElement("img");
+            in_in_img.src = producto.logo;
+            in_in_img.className = "rounded-circle";
+            in_in_img.height = "40";
+
+            in_in_td_1.appendChild(in_in_img);
+
+            in_in_tr.appendChild(in_in_td_1);
+
+            in_in_td_2 = document.createElement("td");
+
+            in_in_h_3 = document.createElement("h3");
+            in_in_h_3.innerHTML = " &nbsp;" + producto.marca;
+
+            in_in_td_2.appendChild(in_in_h_3);
+
+            in_in_tr.appendChild(in_in_td_2);
+
+            in_in_t.appendChild(in_in_tr);
+
+            inner_h_3.appendChild(in_in_t);
+
+            inner_td_2.appendChild(inner_h_3);
+
+            inner_tr.appendChild(inner_td_2);
+
+            inner_table.appendChild(inner_tr);
+
+            td.appendChild(inner_table);
+
+            tr.appendChild(td);
+
+            table.appendChild(tr);
+
+            m_review.appendChild(table);
+
+            if(localStorage.getItem("token")) {
+                let xhr = new XMLHttpRequest();
+                xhr.open('PUT', "http://localhost:3000/api/producto_resena");
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.send(JSON.stringify({"usuario_token": localStorage.getItem("token"), "product_id": producto._id}));
+                xhr.onload = function () {
+                    if (xhr.status != 200) { 
+                        console.log("Mala consulta.");
+                    } else {
+                        let flag = JSON.parse(xhr.response);
+
+                        let botones = document.getElementById("btns_display");
+                        botones.innerHTML = "";
+
+                        table = document.createElement("table");
+                        table.width = "80%";
+
+                        tr = document.createElement("tr");
+
+                        td = document.createElement("td");
+
+                        inner_table = document.createElement("table");
+
+                        inner_tr = document.createElement("tr");
+
+                        inner_td_1 = document.createElement("td");
+
+                        let a = document.createElement("a");
+                        a.className = "btn btn-primary";
+                        a.href = "productos_marca";
+                        a.role = "button";
+                        a.innerHTML = '<i class="fa fa-arrow-left" aria-hidden="true"></i>';
+
+                        inner_td_1.appendChild(a);
+
+                        inner_tr.appendChild(inner_td_1);
+
+                        inner_td_2 = document.createElement("td");
+                        inner_td_2.align = "right";
+                        inner_td_2.width = "100%";
+
+                        in_in_t = document.createElement("table"); 
+
+                        in_in_tr = document.createElement("tr");
+
+                        in_in_td_1 = document.createElement("td");
+
+                        let in_in_btn = document.createElement("btn");
+                        in_in_btn.type = "button";
+                        in_in_btn.className = "btn btn-primary";
+                        in_in_btn.setAttribute("data-toggle", "modal");
+                        in_in_btn.setAttribute("data-target", "#modalChat");
+                        in_in_btn.innerHTML = "Dudas/Comentar";
+
+                        in_in_td_1.appendChild(in_in_btn);
+
+                        in_in_tr.appendChild(in_in_td_1);
+
+                        if(flag) {
+                            in_in_td_2 = document.createElement("td");
+                            in_in_td_2.width = "10%";
+
+                            in_in_tr.appendChild(in_in_td_2);
+
+                            let in_in_td_3 = document.createElement("td");
+                            in_in_td_3.align = "rigth";
+
+                            in_in_btn = document.createElement("btn");
+                            in_in_btn.type = "button";
+                            in_in_btn.className = "btn btn-primary";
+                            in_in_btn.setAttribute("data-toggle", "modal");
+                            in_in_btn.setAttribute("data-target", "#modalReseña");
+                            in_in_btn.innerHTML = "Reseña";
+
+                            in_in_td_3.appendChild(in_in_btn);
+
+                            in_in_tr.appendChild(in_in_td_3);
+                        }
+
+                        in_in_t.appendChild(in_in_tr);
+
+                        inner_td_2.appendChild(in_in_t);
+
+                        inner_tr.appendChild(inner_td_2);
+
+                        inner_table.appendChild(inner_tr);
+
+                        td.appendChild(inner_table);
+
+                        tr.appendChild(td);
+
+                        table.appendChild(tr);
+
+                        botones.appendChild(table);
+                    }
+                };
+            }
+            else {
+                let botones = document.getElementById("btns_display");
+                botones.innerHTML = "";
+
+                table = document.createElement("table");
+                table.width = "80%";
+
+                tr = document.createElement("tr");
+
+                td = document.createElement("td");
+
+                inner_table = document.createElement("table");
+
+                inner_tr = document.createElement("tr");
+
+                inner_td_1 = document.createElement("td");
+
+                let a = document.createElement("a");
+                a.className = "btn btn-primary";
+                a.href = "productos_marca";
+                a.role = "button";
+                a.innerHTML = '<i class="fa fa-arrow-left" aria-hidden="true"></i>';
+
+                inner_td_1.appendChild(a);
+
+                inner_tr.appendChild(inner_td_1);
+
+                inner_table.appendChild(inner_tr);
+
+                td.appendChild(inner_table);
+
+                tr.appendChild(td);
+
+                table.appendChild(tr);
+
+                botones.appendChild(table);
+            }
         }
     };
 }
@@ -1190,4 +1486,42 @@ function apartar() {
 
 function addCarrito() {
     alert('Producto agregado al carrito.');
+}
+
+function readChat() {
+    let message = document.getElementById("chat_message").value;
+    
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', "http://localhost:3000/api/doubts");
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({"usuario_token": localStorage.getItem("token"), "duda": message, "product_id": localStorage.getItem("producto_id")}));
+    xhr.onload = function () {
+        if (xhr.status != 201) { 
+            console.log("Un parametro esta mal.");
+        } else { 
+            alert("Mensaje enviado");
+        }
+    };
+}
+
+function readReview() {
+    let resena = document.getElementById("text_resena").value; 
+    let value;
+    for(let i = 0 ; i < 5 ; i++) {
+        if(document.getElementById("radio" + (i + 1)).checked) {
+            value = document.getElementById("radio" + (i + 1)).value;
+        }
+    }
+    
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', "http://localhost:3000/api/reviews");
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({"usuario_token": localStorage.getItem("token"), "reseña": resena, "product_id": localStorage.getItem("producto_id"), "estrellas": value}));
+    xhr.onload = function () {
+        if (xhr.status != 201) { 
+            console.log("Un parametro esta mal.");
+        } else { 
+            alert("Reseña enviada");
+        }
+    };
 }

@@ -65,7 +65,7 @@
 # {
 #     "usuario_token": "qwertyuiop-637a5abde3f6f33d7a14317f-user",
 #     "duda": "Tienes en negro?",
-#     "imagen": "images/r2_p1.jpg"
+#     "product_id": "6388e1452e96ac15c0b0928f"
 # }
 
 // Post reviews
@@ -75,7 +75,7 @@
 # {
 #     "usuario_token": "qwertyuiop-637a5abde3f6f33d7a14317f-user",
 #     "reseña": "El producto me llegó en tiempo y completo.",
-#     "imagen": "images/r2_p1.jpg",
+#     "product_id": "6388e1452e96ac15c0b0928f",
 #     "estrellas": 3
 # }
 

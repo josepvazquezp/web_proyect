@@ -667,9 +667,9 @@ app.post('/api/login', (req, res) => {
 app.post('/api/doubts', (req, res) => {
     let complete_token = req.body.usuario_token;
     let texto_duda = req.body.duda;
-    let imagen = req.body.imagen;
+    let product_id = req.body.product_id;
     
-    if(complete_token == undefined || texto_duda == undefined || imagen == undefined) {
+    if(complete_token == undefined || texto_duda == undefined || product_id == undefined) {
         res.sendStatus(400);
     }
     else {
@@ -681,41 +681,45 @@ app.post('/api/doubts', (req, res) => {
 
         id_token = complete_token.substring(11, id_token + 1);
 
-        Product.find({
-            imagen: {$regex: imagen}
-        }, function (err, docs) {
-            let temp = docs[0];
-
-            if(temp == undefined) {
-                res.status(400);
-                res.send("Usuario invalido para agregar producto.");
+        Product.findById(product_id, (err, docs) => {
+            if(err) {
+                console.log("Error: " + err);
+                res.sendStatus(400);
             }
             else {
-                let newDoubt = {usuario_token: id_token, duda: texto_duda};
-                let doubt = Doubt(newDoubt);
-                doubt.save().then((doc) => {
-                    console.log(chalk.green("Duda creada: ") + doc);
-                
-                    if(temp.dudas == undefined) {
-                        temp.dudas = [];
-                    } 
+                let temp = docs;
 
-                    temp.dudas.push(doc.id);
-                    console.log(temp);
+                if(temp == undefined) {
+                    res.status(400);
+                    res.send("Usuario invalido para agregar producto.");
+                }
+                else {
+                    let newDoubt = {usuario_token: id_token, duda: texto_duda};
+                    let doubt = Doubt(newDoubt);
+                    doubt.save().then((doc) => {
+                        console.log(chalk.green("Duda creada: ") + doc);
+                    
+                        if(temp.dudas == undefined) {
+                            temp.dudas = [];
+                        } 
 
-                    Product.findByIdAndUpdate(temp.id, temp, {new: true}, (err, doc) => {
-                        if(err) {
-                            console.log("Error: " + err);
-                            res.send(err);
-                        }
-                        else {
-                            console.log(chalk.green("Producto actualizado:"));
-                            console.log(doc);
-                            res.status(201);
-                            res.send(doc);
-                        }
+                        temp.dudas.push(doc.id);
+                        console.log(temp);
+
+                        Product.findByIdAndUpdate(temp.id, temp, {new: true}, (err, doc) => {
+                            if(err) {
+                                console.log("Error: " + err);
+                                res.send(err);
+                            }
+                            else {
+                                console.log(chalk.green("Producto actualizado:"));
+                                console.log(doc);
+                                res.status(201);
+                                res.send(doc);
+                            }
+                        });
                     });
-                });
+                }
             }
         });
     } 
@@ -724,10 +728,10 @@ app.post('/api/doubts', (req, res) => {
 app.post('/api/reviews', (req, res) => {
     let complete_token = req.body.usuario_token;
     let estrellas = req.body.estrellas;
-    let imagen = req.body.imagen;
+    let product_id = req.body.product_id;
     let reseña = req.body.reseña;
     
-    if(complete_token == undefined || estrellas == undefined || imagen == undefined || reseña == undefined) {
+    if(complete_token == undefined || estrellas == undefined || product_id == undefined || reseña == undefined) {
         res.sendStatus(400);
     }
     else {
@@ -739,41 +743,45 @@ app.post('/api/reviews', (req, res) => {
 
         id_token = complete_token.substring(11, id_token + 1);
 
-        Product.find({
-            imagen: {$regex: imagen}
-        }, function (err, docs) {
-            let temp = docs[0];
-
-            if(temp == undefined) {
-                res.status(400);
-                res.send("Usuario invalido para agregar producto.");
+        Product.findById(product_id, (err, docs) => {
+            if(err) {
+                console.log("Error: " + err);
+                res.sendStatus(400);
             }
             else {
-                let newReview = {usuario_token: id_token, estrellas: estrellas, reseña: reseña};
-                let review = Review(newReview);
-                review.save().then((doc) => {
-                    console.log(chalk.green("Reseña creada: ") + doc);
-                
-                    if(temp.reseñas == undefined) {
-                        temp.reseñas = [];
-                    } 
+                let temp = docs;
 
-                    temp.reseñas.push(doc.id);
-                    console.log(temp);
+                if(temp == undefined) {
+                    res.status(400);
+                    res.send("Usuario invalido para agregar producto.");
+                }
+                else {
+                    let newReview = {usuario_token: id_token, estrellas: estrellas, reseña: reseña};
+                    let review = Review(newReview);
+                    review.save().then((doc) => {
+                        console.log(chalk.green("Reseña creada: ") + doc);
+                    
+                        if(temp.reseñas == undefined) {
+                            temp.reseñas = [];
+                        } 
 
-                    Product.findByIdAndUpdate(temp.id, temp, {new: true}, (err, doc) => {
-                        if(err) {
-                            console.log("Error: " + err);
-                            res.send(err);
-                        }
-                        else {
-                            console.log(chalk.green("Producto actualizado:"));
-                            console.log(doc);
-                            res.status(201);
-                            res.send(doc);
-                        }
+                        temp.reseñas.push(doc.id);
+                        console.log(temp);
+
+                        Product.findByIdAndUpdate(temp.id, temp, {new: true}, (err, doc) => {
+                            if(err) {
+                                console.log("Error: " + err);
+                                res.send(err);
+                            }
+                            else {
+                                console.log(chalk.green("Producto actualizado:"));
+                                console.log(doc);
+                                res.status(201);
+                                res.send(doc);
+                            }
+                        });
                     });
-                });
+                }
             }
         });
     } 
@@ -1497,7 +1505,7 @@ app.put('/api/producto_resena', (req, res) => {
     if(product_id == undefined || usuario_token == undefined) {
         res.sendStatus(400);
     }
-    else{
+    else {
         let id_token, index;
 
         for(let i = 11 ; usuario_token[i] != '-' ; i++) {

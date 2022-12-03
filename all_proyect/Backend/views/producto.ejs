@@ -531,78 +531,14 @@
       <div id="producto_d">
 
       </div>
-      <!-- <table width="80%">
-        <tr>
-          <td>
-            <table width="90%">
-              <tr>
-                <td>
-                  <img src="images/r2_p1.jpg" height="600">
-                </td>
-                <td valign="top">
-                  <h1>Traje Vintage <br>color Rosa</h1>
-                  <br>
-                  <h3><img src="images/logo_r2.jpg" class="rounded-circle" height="50"> &nbsp; &nbsp;BOCA DRAGÓN</h3>
-                  <br>
-                  <br>
-                  <p>All pinked-out, head-to-toe in Boca Dragon <br> vintage heirlooms. Silk Chinese jacket, 80’s <br> button-up, and 80’s balloon pants POW 💕💕</p>
-                  <br>
-                  <br>
-                  <h2>$900</h2>
-                  <br>
-                  <h5>Disponible</h5>
-                  <br>
-                  <br>
-                  <br>
-                  <table width="60%">
-                    <tr>
-                      <td>
-                        <button type="button" class="btn btn-primary" onclick="alert('Producto apartado\nRECUERDA: Tienes 48 horas para recoger el producto.');">Apartar</button>
-                      </td>
-                      <td align="right">
-                        <button type="button" class="btn btn-primary" onclick="alert('Producto agregado al carrito.');"><i class="fa fa-shopping-cart" aria-hidden="true"></i> +</button>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table> -->
     </center>
 
     <br>
     <br>
 
     <center>
-      <table width="80%">
-        <tr>
-          <td>
-            <table width="100%">
-              <tr>
-                <td>
-                  <a name="" id="" class="btn btn-primary" href="productos_marca" role="button"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
-                </td>
-                <td align="right">
-                  <table>
-                    <tr>
-                      <td>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalChat">Dudas/Comentar</button>
-                      </td>
-                      <td width="10%">
-                      </td>
-                      <td align="rigth">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalReseña">Reseña</button>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
+      <div id="btns_display">
+      </div>
     </center>
 
     <div class="modal" id="modalChat">
@@ -615,24 +551,10 @@
               <br>
               <br>
               <center>
-                <table width="80%">
-                  <tr>
-                    <td>
-                      <table width="100%">
-                        <tr>
-                          <td>
-                            <img src="images/r2_p1.jpg" height="200">
-                          </td>
-                          <td align="center">
-                            <h2>Traje Vintage color Rosa</h2>
-                            <br>
-                            <h3><img src="images/logo_r2.jpg" class="rounded-circle" height="50"> &nbsp; &nbsp;BOCA DRAGÓN</h3>
-                            </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
+                <div id="chat_display">
+
+                </div>
+        
               <br>
               
               <hr clas="my-2"></hr>
@@ -642,11 +564,11 @@
               <div class="modal-body" id="login2">
                 <div class="form-group">
                   <label class="font-weight-bold" for="">Dudas o comentarios:</label>
-                  <input type="text" class="form-control" name="" id="" aria-describedby="helpId" placeholder="Ingrese su mensaje">
+                  <input type="text" class="form-control" name="" id="chat_message" aria-describedby="helpId" placeholder="Ingrese su mensaje">
                 </div>
               </div>
               <div class="modal-footer" id="login3">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="alert('Publicación realizada.');">Publicar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="readChat();">Publicar</button>
                 <button type="button" class="btn btn-dark" data-dismiss="modal">Cerrar</button>
               </div>  
             </div>
@@ -663,24 +585,9 @@
                 <br>
                 <br>
                 <center>
-                  <table width="80%">
-                    <tr>
-                      <td>
-                        <table width="100%">
-                          <tr>
-                            <td>
-                              <img src="images/r2_p1.jpg" height="200">
-                            </td>
-                            <td align="center">
-                              <h2>Traje Vintage color Rosa</h2>
-                              <br>
-                              <h3><img src="images/logo_r2.jpg" class="rounded-circle" height="50"> &nbsp; &nbsp;BOCA DRAGÓN</h3>
-                              </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-                  </table>
+                  <div id="resena_display">
+
+                  </div>
                 <br>
                 
                 <hr clas="my-2"></hr>
@@ -710,12 +617,16 @@
                             </h3>
                           </form>
                         </td>
-                      </tr>
+                      </tr>                    
                     </table>
+                  </div>
+                  <div class="form-group">
+                    <label class="font-weight-bold" for="">Recomendación:</label>
+                    <input type="text" class="form-control" name="" id="text_resena" aria-describedby="helpId" placeholder="Ingrese su recomendación">
                   </div>
                 </div>
                 <div class="modal-footer" id="login3">
-                  <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="alert('Publicación realizada.');">Publicar</button>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="readReview();">Publicar</button>
                   <button type="button" class="btn btn-dark" data-dismiss="modal">Cerrar</button>
                 </div>  
               </div>
