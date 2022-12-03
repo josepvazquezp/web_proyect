@@ -1507,6 +1507,7 @@ function addCarrito() {
             console.log("Un parametro esta mal.");
         } else { 
             alert('Producto agregado al carrito.');
+            displayCarrito();
         }
     };
 }
@@ -2092,16 +2093,15 @@ function displayCarrito() {
         else {
             let user = JSON.parse(xhr.responseText);
 
-            alert(xhr.responseText);
-
             let carrito = user.carrito;
 
             let display_carrito = document.getElementById("products_carrito");
             display_carrito.innerHTML = "";
 
-            for(let i = 0 ; carrito.length ; i++) {
-                xhr = new XMLHttpRequest();
-                xhr.open('PUT', url_temp);
+            for(let i = 0 ; i < carrito.length ; i++) {
+                let xhr = new XMLHttpRequest();
+                xhr.open('PUT', 'http://localhost:3000/api/display_producto');
+                xhr.setRequestHeader('Content-Type', 'application/json');
                 xhr.send(JSON.stringify({"id": carrito[i]}));
                 xhr.onload = function () {
                     if (xhr.status != 200) { 
@@ -2163,8 +2163,9 @@ function displayCarrito() {
 
                         let in_in_btn = document.createElement("button");
                         in_in_btn.type = "button";
-                        in_in_btn.className = "btn vtn-danger";
-                        in_in_btn.addEventListener("click",deleteCarrito);
+                        in_in_btn.className = "btn btn-danger";
+                        in_in_btn.id = product._id;
+                        in_in_btn.addEventListener("click", deleteCarrito);
                         in_in_btn.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i>';
 
                         in_in_td_2.appendChild(in_in_btn);
@@ -2173,7 +2174,7 @@ function displayCarrito() {
 
                         in_in_table.appendChild(in_in_tr);
 
-                        inner_td_2.appendChild(inner_table);
+                        inner_td_2.appendChild(in_in_table);
 
                         inner_tr.appendChild(inner_td_2);
 
@@ -2197,5 +2198,33 @@ function displayCarrito() {
 }
 
 function deleteCarrito() {
-    alert("Eliminar producto.");
+    let xhr = new XMLHttpRequest();
+    xhr.open('DELETE', 'http://localhost:3000/api/carrito');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({"usuario_token": localStorage.getItem("token"), "product_id": this.id}));
+    xhr.onload = function () {
+        if (xhr.status != 200) { 
+            alert("Hubo un error intenta más tarde.");
+        } 
+        else {
+            alert("El producto ha sido eliminado del carrito.");
+            displayCarrito();         
+        }
+    };
+}
+
+function comprarCarrito() {
+    let xhr = new XMLHttpRequest();
+    xhr.open('PUT', 'http://localhost:3000/api/comprar');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({"usuario_token": localStorage.getItem("token")}));
+    xhr.onload = function () {
+        if (xhr.status != 200) { 
+            alert("Hubo un error intenta más tarde.");
+        } 
+        else {
+            alert('Productos comprados.');
+            displayCarrito();         
+        }
+    };
 }

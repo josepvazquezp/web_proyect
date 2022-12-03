@@ -88,31 +88,13 @@
 #     "product_id": "6388e1452e96ac15c0b0928f"
 # }
 
-// Post carrito marca
-# POST http://localhost:3000/api/carrito HTTP/1.1 
-# content-type: application/json
-
-# {
-#     "usuario_token": "qwertyuiop-637a5de5e7da54eb665cf563-marca",
-#     "imagen": "images/r2_p1.jpg"
-# }
-
-// Post carrito bazar
-# POST http://localhost:3000/api/carrito HTTP/1.1 
-# content-type: application/json
-
-# {
-#     "usuario_token": "qwertyuiop-637a5dffe7da54eb665cf566-bazar",
-#     "imagen": "images/r2_p1.jpg"
-# }
-
 // Post apartar
 # POST http://localhost:3000/api/apartar HTTP/1.1 
 # content-type: application/json
 
 # {
 #     "usuario_token": "qwertyuiop-637a5abde3f6f33d7a14317f-user",
-#     "imagen": "images/r2_p1.jpg"
+#     "product_id": "6388e1452e96ac15c0b0928f"
 # }
 
 // Put comprar user
@@ -220,7 +202,7 @@
 # content-type: application/json
 
 # {
-#     "id": "6388e56ad74abe70b4ab63ae"
+#     "id": "6388e1452e96ac15c0b0928f"
 # }
 
 # PUT http://localhost:3000/api/producto_resena HTTP/1.1 
