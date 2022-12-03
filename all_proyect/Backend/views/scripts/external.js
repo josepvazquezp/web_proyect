@@ -1342,6 +1342,8 @@ function displayProducto(id) {
 
             m_review.appendChild(table);
 
+            displayDudas();
+
             if(localStorage.getItem("token")) {
                 let xhr = new XMLHttpRequest();
                 xhr.open('PUT', "http://localhost:3000/api/producto_resena");
@@ -1499,7 +1501,7 @@ function readChat() {
         if (xhr.status != 201) { 
             console.log("Un parametro esta mal.");
         } else { 
-            alert("Mensaje enviado");
+            displayDudas();
         }
     };
 }
@@ -1524,4 +1526,238 @@ function readReview() {
             alert("Reseña enviada");
         }
     };
+}
+
+function displayDudas() {
+    let xhr = new XMLHttpRequest();
+    xhr.open('PUT', "http://localhost:3000/api/producto_foro");
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({"product_id": localStorage.getItem("producto_id")}));
+    xhr.onload = function () {
+        if (xhr.status != 200) { 
+            console.log("Un parametro esta mal.");
+        } else {
+            let dudas = JSON.parse(xhr.response);
+
+            let display_dudas = document.getElementById("display_d_r");
+            display_dudas.innerHTML = "";
+
+            let table = document.createElement("table");
+
+            for(let i = 0 ; i < dudas.length ; i++) {
+                let url_temp = "http://localhost:3000/api/user/" + dudas[i].usuario_token;
+                let xhr = new XMLHttpRequest();
+                xhr.open('GET', url_temp);
+                xhr.send();
+                xhr.onload = function () {
+                    if (xhr.status != 200) { 
+                        alert("Hubo un error intenta más tarde.");
+                    } 
+                    else {
+                        let user = JSON.parse(xhr.response);
+
+                        let tr = document.createElement("tr");
+
+                        let td = document.createElement("td");
+
+                        let inner_table = document.createElement("table");
+                        
+                        let inner_tr_1 = document.createElement("tr");
+
+                        let inner_td_1 = document.createElement("td");
+                        inner_td_1.width = "5%";
+
+                        let img = document.createElement("img");
+                        img.className = "rounded-circle";
+                        img.src = user.imagen == undefined? user.logo : user.imagen;
+                        img.height = "30";
+
+                        inner_td_1.appendChild(img);
+
+                        inner_tr_1.appendChild(inner_td_1);
+                        
+                        let inner_td_2 = document.createElement("td");
+
+                        let inner_h4 = document.createElement("h4");
+
+                        if(user.bazar != undefined) {
+                            inner_h4.innerHTML = user.bazar;
+                        }
+                        else if(user.marca != undefined) {
+                            inner_h4.innerHTML = user.marca;
+                        }
+                        else {
+                            inner_h4.innerHTML = user.nombre;
+                        }
+
+                        inner_td_2.appendChild(inner_h4);
+
+                        inner_tr_1.appendChild(inner_td_2);
+
+                        inner_table.appendChild(inner_tr_1);
+
+                        let inner_tr_2 = document.createElement("tr");
+                        
+                        inner_td_1 = document.createElement("td");
+
+                        inner_tr_2.appendChild(inner_td_1);
+
+                        inner_td_2 = document.createElement("td");
+
+                        let p = document.createElement("p");
+                        p.innerHTML = dudas[i].duda;
+
+                        inner_td_2.appendChild(p);
+
+                        let br = document.createElement("br");
+
+                        inner_td_2.appendChild(br);
+
+                        inner_tr_2.appendChild(inner_td_2);
+
+                        inner_table.appendChild(inner_tr_2);
+
+                        let backup_table = inner_table.cloneNode(true);
+
+                        td.appendChild(inner_table);
+
+                        tr.appendChild(td);
+
+                        table.appendChild(tr);
+
+                        display_dudas.appendChild(table);
+
+                        if(dudas[i].respuesta != undefined) {
+                            for(let j = 0 ; j < dudas[i].respuesta.length ; j++) {
+                                let url_temp = "http://localhost:3000/api/doubt/" + dudas[i].respuesta[j];
+                                let xhr = new XMLHttpRequest();
+                                xhr.open('GET', url_temp);
+                                xhr.send();
+                                xhr.onload = function () {
+                                    if (xhr.status != 200) { 
+                                        alert("Hubo un error intenta más tarde.");
+                                    } 
+                                    else { 
+                                        let doubt = JSON.parse(xhr.response);
+
+                                        let url_temp = "http://localhost:3000/api/user/" + doubt.usuario_token;
+                                        xhr = new XMLHttpRequest();
+                                        xhr.open('GET', url_temp);
+                                        xhr.send();
+                                        xhr.onload = function () {
+                                            if (xhr.status != 200) { 
+                                                alert("Hubo un error intenta más tarde.");
+                                            } 
+                                            else {
+                                                let user = JSON.parse(xhr.response);
+        
+                                                let tr = document.createElement("tr");
+        
+                                                let td = document.createElement("td");
+        
+                                                let inner_table = document.createElement("table");
+
+                                                let inner_tr_0 = document.createElement("tr");
+
+                                                let inner_td = document.createElement("td");
+                                                inner_td.width = "5%";
+
+                                                inner_tr_0.appendChild(inner_td);
+
+                                                inner_td = document.createElement("td");
+                                                inner_td.colSpan = "2";
+
+                                                let inner_h5 = document.createElement("h5");
+                                                inner_h5.innerHTML = '<i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>' + '    Respondiendo a: </h5>';
+
+                                                inner_td.appendChild(inner_h5);
+
+                                                inner_td.appendChild(backup_table.cloneNode(true));
+
+                                                inner_tr_0.appendChild(inner_td);
+
+                                                inner_table.appendChild(inner_tr_0);
+                                                
+                                                let inner_tr_1 = document.createElement("tr");
+        
+                                                let inner_td_0 = document.createElement("td");
+                                                inner_td_0.width = "5%";
+        
+                                                inner_tr_1.appendChild(inner_td_0);
+        
+                                                let inner_td_1 = document.createElement("td");
+                                                inner_td_1.width = "5%";
+        
+                                                let img = document.createElement("img");
+                                                img.className = "rounded-circle";
+                                                img.src = user.imagen == undefined? user.logo : user.imagen;
+                                                img.height = "30";
+        
+                                                inner_td_1.appendChild(img);
+        
+                                                inner_tr_1.appendChild(inner_td_1);
+                                                
+                                                let inner_td_2 = document.createElement("td");
+        
+                                                let inner_h4 = document.createElement("h4");
+        
+                                                if(user.bazar != undefined) {
+                                                    inner_h4.innerHTML = user.bazar;
+                                                }
+                                                else if(user.marca != undefined) {
+                                                    inner_h4.innerHTML = user.marca;
+                                                }
+                                                else {
+                                                    inner_h4.innerHTML = user.nombre;
+                                                }
+        
+                                                inner_td_2.appendChild(inner_h4);
+        
+                                                inner_tr_1.appendChild(inner_td_2);
+        
+                                                inner_table.appendChild(inner_tr_1);
+        
+                                                let inner_tr_2 = document.createElement("tr");
+                                                
+                                                inner_td_1 = document.createElement("td");
+        
+                                                inner_tr_2.appendChild(inner_td_1);
+        
+                                                inner_td_1 = document.createElement("td");
+        
+                                                inner_tr_2.appendChild(inner_td_1);
+        
+                                                inner_td_2 = document.createElement("td");
+        
+                                                let p = document.createElement("p");
+                                                p.innerHTML = doubt.duda;
+        
+                                                inner_td_2.appendChild(p);
+        
+                                                let br = document.createElement("br");
+        
+                                                inner_td_2.appendChild(br);
+        
+                                                inner_tr_2.appendChild(inner_td_2);
+        
+                                                inner_table.appendChild(inner_tr_2);
+        
+                                                td.appendChild(inner_table);
+        
+                                                tr.appendChild(td);
+        
+                                                table.appendChild(tr);
+
+                                                display_dudas.appendChild(table);
+                                            }
+                                        };
+                                    } 
+                                };
+                            }
+                        }
+                    }
+                };
+            } 
+        }
+    }; 
 }

@@ -694,7 +694,7 @@ app.post('/api/doubts', (req, res) => {
                     res.send("Usuario invalido para agregar producto.");
                 }
                 else {
-                    let newDoubt = {usuario_token: id_token, duda: texto_duda};
+                    let newDoubt = {usuario_token: complete_token, duda: texto_duda};
                     let doubt = Doubt(newDoubt);
                     doubt.save().then((doc) => {
                         console.log(chalk.green("Duda creada: ") + doc);
@@ -1580,5 +1580,130 @@ app.put('/api/producto_resena', (req, res) => {
             res.sendStatus(400);
         }
         
+    }
+});
+
+app.put('/api/producto_foro', (req, res) => {
+    let product_id = req.body.product_id;
+    
+    if(product_id == undefined) {
+        res.sendStatus(400);
+    }
+    else {
+        Product.findById(product_id, (err, docs) => {
+            if(err) {
+                console.log("Error: " + err);
+                res.sendStatus(400);
+            }
+            else {
+                let doubts_ids = docs.dudas;
+                let doubts = [];
+
+                for(let i = 0 ; i < doubts_ids.length ; i++) {
+                    Doubt.findById(doubts_ids[i], (err, docs) => {
+                        if(err) {
+                            console.log("Error: " + err);
+                            res.sendStatus(400);
+                        }
+                        else {
+                            doubts.push(docs);
+
+                            if(doubts.length == doubts_ids.length) {
+                                res.status(200);
+                                res.send(doubts);                                
+                            }
+                        }
+                    });           
+                }
+            }
+        });
+    }
+});
+
+app.post('/api/response', (req, res) => {
+    let doubt_id = req.body.doubt_id;
+    let usuario_token = req.body.usuario_token;
+    let response = req.body.response;
+    
+    if(doubt_id == undefined || usuario_token == undefined || response == undefined) {
+        res.sendStatus(400);
+    }
+    else {
+        let id_token, index;
+
+        for(let i = 11 ; usuario_token[i] != '-' ; i++) {
+            index = i;
+        }
+
+        id_token = usuario_token.substring(11, index + 1);
+
+        let tipo = usuario_token.substring(index + 2, usuario_token.length);
+
+        if(tipo == "marca") {
+            Doubt.findById(doubt_id, (err, docs) => {
+                if(err) {
+                    console.log("Error: " + err);
+                    res.sendStatus(400);
+                }
+                else {
+                    let temp = docs;
+    
+                    if(temp == undefined) {
+                        res.status(400);
+                        res.send("Usuario invalido para agregar doubt.");
+                    }
+                    else {
+                        let newDoubt = {usuario_token: usuario_token, duda: response};
+                        let doubt = Doubt(newDoubt);
+                        doubt.save().then((doc) => {
+                            console.log(chalk.green("Duda creada: ") + doc);
+                        
+                            if(temp.respuesta == undefined) {
+                                temp.respuesta = [];
+                            } 
+    
+                            temp.respuesta.push(doc.id);
+                            console.log(temp);
+    
+                            Doubt.findByIdAndUpdate(temp.id, temp, {new: true}, (err, doc) => {
+                                if(err) {
+                                    console.log("Error: " + err);
+                                    res.send(err);
+                                }
+                                else {
+                                    console.log(chalk.green("Duda actualizada:"));
+                                    console.log(doc);
+                                    res.status(201);
+                                    res.send(doc);
+                                }
+                            });
+                        });
+                    }
+                }
+            });
+        }
+        else {
+            res.sendStatus(400);
+        }
+    }
+});
+
+app.get('/api/doubt/:doubt_id', (req, res) => {
+    let doubt_id = req.params.doubt_id;
+
+    if(doubt_id == undefined) {
+        res.sendStatus(400);
+    }
+    else {
+        Doubt.findById(doubt_id, (err, docs) => {
+            if(err) {
+                console.log("Error: " + err);
+                res.sendStatus(400);
+            }
+            else {
+                res.status(200);
+                res.send(docs);
+            }
+        });
     }
 });
