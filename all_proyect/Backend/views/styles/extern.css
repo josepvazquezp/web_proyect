@@ -195,3 +195,11 @@ input[class = "r_star"] {
 input[class = "r_star"]:checked  ~.stars { 
     color: var(--orange_b_per);
 }
+
+#res_modal {
+    background-color: var(--light_blue_per);
+}
+
+#res_modal_text {
+    color: whitesmoke;
+}

@@ -1529,235 +1529,398 @@ function readReview() {
 }
 
 function displayDudas() {
+    let url_temp = "http://localhost:3000/api/user/" + localStorage.getItem("token");
     let xhr = new XMLHttpRequest();
-    xhr.open('PUT', "http://localhost:3000/api/producto_foro");
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify({"product_id": localStorage.getItem("producto_id")}));
+    xhr.open('GET', url_temp);
+    xhr.send();
     xhr.onload = function () {
-        if (xhr.status != 200) { 
-            console.log("Un parametro esta mal.");
-        } else {
-            let dudas = JSON.parse(xhr.response);
+        let flag_login = false;
+        
+        if (xhr.status == 200) { 
+            let login = JSON.parse(xhr.response);
 
-            let display_dudas = document.getElementById("display_d_r");
-            display_dudas.innerHTML = "";
+            if(login.marca != undefined && login.marca == localStorage.getItem("marca")) {
+                flag_login = true;
+            }
+        }   
 
-            let table = document.createElement("table");
+            xhr = new XMLHttpRequest();
+            xhr.open('PUT', "http://localhost:3000/api/producto_foro");
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({"product_id": localStorage.getItem("producto_id")}));
+            xhr.onload = function () {
+                if (xhr.status != 200) { 
+                    console.log("Un parametro esta mal.");
+                } else {
+                    let dudas = JSON.parse(xhr.response);
+        
+                    let display_dudas = document.getElementById("display_d_r");
+                    display_dudas.innerHTML = "";
+        
+                    let table = document.createElement("table");
+        
+                    for(let i = 0 ; i < dudas.length ; i++) {
+                        let url_temp = "http://localhost:3000/api/user/" + dudas[i].usuario_token;
+                        let xhr = new XMLHttpRequest();
+                        xhr.open('GET', url_temp);
+                        xhr.send();
+                        xhr.onload = function () {
+                            if (xhr.status != 200) { 
+                                alert("Hubo un error intenta más tarde.");
+                            } 
+                            else {
+                                let user = JSON.parse(xhr.response);
+        
+                                let tr = document.createElement("tr");
+        
+                                let td = document.createElement("td");
+        
+                                let inner_table = document.createElement("table");
+                                
+                                let inner_tr_1 = document.createElement("tr");
+        
+                                let inner_td_1 = document.createElement("td");
+                                inner_td_1.width = "5%";
+        
+                                let img = document.createElement("img");
+                                img.className = "rounded-circle";
+                                img.src = user.imagen == undefined? user.logo : user.imagen;
+                                img.height = "30";
+        
+                                inner_td_1.appendChild(img);
+        
+                                inner_tr_1.appendChild(inner_td_1);
+                                
+                                let inner_td_2 = document.createElement("td");
+        
+                                let inner_h4 = document.createElement("h4");
+        
+                                if(user.bazar != undefined) {
+                                    inner_h4.innerHTML = user.bazar;
+                                }
+                                else if(user.marca != undefined) {
+                                    inner_h4.innerHTML = user.marca;
+                                }
+                                else {
+                                    inner_h4.innerHTML = user.nombre;
+                                }
+        
+                                inner_td_2.appendChild(inner_h4);
+        
+                                inner_tr_1.appendChild(inner_td_2);
+        
+                                inner_table.appendChild(inner_tr_1);
+        
+                                let inner_tr_2 = document.createElement("tr");
+                                
+                                inner_td_1 = document.createElement("td");
+        
+                                inner_tr_2.appendChild(inner_td_1);
+        
+                                inner_td_2 = document.createElement("td");
+        
+                                let p = document.createElement("p");
+                                p.innerHTML = dudas[i].duda;
+        
+                                inner_td_2.appendChild(p);
+        
+                                let br = document.createElement("br");
+        
+                                inner_td_2.appendChild(br);
 
-            for(let i = 0 ; i < dudas.length ; i++) {
-                let url_temp = "http://localhost:3000/api/user/" + dudas[i].usuario_token;
-                let xhr = new XMLHttpRequest();
-                xhr.open('GET', url_temp);
-                xhr.send();
-                xhr.onload = function () {
-                    if (xhr.status != 200) { 
-                        alert("Hubo un error intenta más tarde.");
-                    } 
-                    else {
-                        let user = JSON.parse(xhr.response);
+                                let backup_table;
 
-                        let tr = document.createElement("tr");
+                                if(flag_login && dudas[i].respuesta.length == 0) {
+                                    let backup_td_2 = inner_td_2.cloneNode(true);
+                                    let backup_tr_2 = inner_tr_2.cloneNode(true);
+                                    let backup_table_2 = inner_table.cloneNode(true);
 
-                        let td = document.createElement("td");
+                                    backup_tr_2.appendChild(backup_td_2);
+                                    backup_table_2.appendChild(backup_tr_2);
 
-                        let inner_table = document.createElement("table");
-                        
-                        let inner_tr_1 = document.createElement("tr");
+                                    backup_table = backup_table_2;
 
-                        let inner_td_1 = document.createElement("td");
-                        inner_td_1.width = "5%";
+                                    let btn_res = document.createElement("button");
+                                    btn_res.type = "button";
+                                    btn_res.className = "btn btn-primary";
+                                    btn_res.innerHTML = "Responder";
+                                    btn_res.id = dudas[i]._id;
+                                    btn_res.setAttribute("data-toggle", "modal");
+                                    btn_res.setAttribute("data-target", "#modalResponse");
+                                    btn_res.addEventListener("click", showDoubtModal);
 
-                        let img = document.createElement("img");
-                        img.className = "rounded-circle";
-                        img.src = user.imagen == undefined? user.logo : user.imagen;
-                        img.height = "30";
+                                    inner_td_2.appendChild(btn_res);
 
-                        inner_td_1.appendChild(img);
+                                    inner_td_2.appendChild(br.cloneNode(true));
 
-                        inner_tr_1.appendChild(inner_td_1);
-                        
-                        let inner_td_2 = document.createElement("td");
+                                    inner_td_2.appendChild(br.cloneNode(true));
 
-                        let inner_h4 = document.createElement("h4");
-
-                        if(user.bazar != undefined) {
-                            inner_h4.innerHTML = user.bazar;
-                        }
-                        else if(user.marca != undefined) {
-                            inner_h4.innerHTML = user.marca;
-                        }
-                        else {
-                            inner_h4.innerHTML = user.nombre;
-                        }
-
-                        inner_td_2.appendChild(inner_h4);
-
-                        inner_tr_1.appendChild(inner_td_2);
-
-                        inner_table.appendChild(inner_tr_1);
-
-                        let inner_tr_2 = document.createElement("tr");
-                        
-                        inner_td_1 = document.createElement("td");
-
-                        inner_tr_2.appendChild(inner_td_1);
-
-                        inner_td_2 = document.createElement("td");
-
-                        let p = document.createElement("p");
-                        p.innerHTML = dudas[i].duda;
-
-                        inner_td_2.appendChild(p);
-
-                        let br = document.createElement("br");
-
-                        inner_td_2.appendChild(br);
-
-                        inner_tr_2.appendChild(inner_td_2);
-
-                        inner_table.appendChild(inner_tr_2);
-
-                        let backup_table = inner_table.cloneNode(true);
-
-                        td.appendChild(inner_table);
-
-                        tr.appendChild(td);
-
-                        table.appendChild(tr);
-
-                        display_dudas.appendChild(table);
-
-                        if(dudas[i].respuesta != undefined) {
-                            for(let j = 0 ; j < dudas[i].respuesta.length ; j++) {
-                                let url_temp = "http://localhost:3000/api/doubt/" + dudas[i].respuesta[j];
-                                let xhr = new XMLHttpRequest();
-                                xhr.open('GET', url_temp);
-                                xhr.send();
-                                xhr.onload = function () {
-                                    if (xhr.status != 200) { 
-                                        alert("Hubo un error intenta más tarde.");
-                                    } 
-                                    else { 
-                                        let doubt = JSON.parse(xhr.response);
-
-                                        let url_temp = "http://localhost:3000/api/user/" + doubt.usuario_token;
-                                        xhr = new XMLHttpRequest();
+                                    inner_tr_2.appendChild(inner_td_2);
+        
+                                    inner_table.appendChild(inner_tr_2);
+                                }
+                                else {
+                                    inner_tr_2.appendChild(inner_td_2);
+        
+                                    inner_table.appendChild(inner_tr_2);
+        
+                                    backup_table = inner_table.cloneNode(true);
+                                }
+        
+                                td.appendChild(inner_table);
+        
+                                tr.appendChild(td);
+        
+                                table.appendChild(tr);
+        
+                                display_dudas.appendChild(table);
+        
+                                if(dudas[i].respuesta != undefined) {
+                                    for(let j = 0 ; j < dudas[i].respuesta.length ; j++) {
+                                        let url_temp = "http://localhost:3000/api/doubt/" + dudas[i].respuesta[j];
+                                        let xhr = new XMLHttpRequest();
                                         xhr.open('GET', url_temp);
                                         xhr.send();
                                         xhr.onload = function () {
                                             if (xhr.status != 200) { 
                                                 alert("Hubo un error intenta más tarde.");
                                             } 
-                                            else {
-                                                let user = JSON.parse(xhr.response);
+                                            else { 
+                                                let doubt = JSON.parse(xhr.response);
         
-                                                let tr = document.createElement("tr");
+                                                let url_temp = "http://localhost:3000/api/user/" + doubt.usuario_token;
+                                                xhr = new XMLHttpRequest();
+                                                xhr.open('GET', url_temp);
+                                                xhr.send();
+                                                xhr.onload = function () {
+                                                    if (xhr.status != 200) { 
+                                                        alert("Hubo un error intenta más tarde.");
+                                                    } 
+                                                    else {
+                                                        let user = JSON.parse(xhr.response);
+                
+                                                        let tr = document.createElement("tr");
+                
+                                                        let td = document.createElement("td");
+                
+                                                        let inner_table = document.createElement("table");
         
-                                                let td = document.createElement("td");
+                                                        let inner_tr_0 = document.createElement("tr");
         
-                                                let inner_table = document.createElement("table");
-
-                                                let inner_tr_0 = document.createElement("tr");
-
-                                                let inner_td = document.createElement("td");
-                                                inner_td.width = "5%";
-
-                                                inner_tr_0.appendChild(inner_td);
-
-                                                inner_td = document.createElement("td");
-                                                inner_td.colSpan = "2";
-
-                                                let inner_h5 = document.createElement("h5");
-                                                inner_h5.innerHTML = '<i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>' + '    Respondiendo a: </h5>';
-
-                                                inner_td.appendChild(inner_h5);
-
-                                                inner_td.appendChild(backup_table.cloneNode(true));
-
-                                                inner_tr_0.appendChild(inner_td);
-
-                                                inner_table.appendChild(inner_tr_0);
-                                                
-                                                let inner_tr_1 = document.createElement("tr");
+                                                        let inner_td = document.createElement("td");
+                                                        inner_td.width = "5%";
         
-                                                let inner_td_0 = document.createElement("td");
-                                                inner_td_0.width = "5%";
+                                                        inner_tr_0.appendChild(inner_td);
         
-                                                inner_tr_1.appendChild(inner_td_0);
+                                                        inner_td = document.createElement("td");
+                                                        inner_td.colSpan = "2";
         
-                                                let inner_td_1 = document.createElement("td");
-                                                inner_td_1.width = "5%";
+                                                        let inner_h5 = document.createElement("h5");
+                                                        inner_h5.innerHTML = '<i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>' + '    Respondiendo a: </h5>';
         
-                                                let img = document.createElement("img");
-                                                img.className = "rounded-circle";
-                                                img.src = user.imagen == undefined? user.logo : user.imagen;
-                                                img.height = "30";
+                                                        inner_td.appendChild(inner_h5);
         
-                                                inner_td_1.appendChild(img);
+                                                        inner_td.appendChild(backup_table.cloneNode(true));
         
-                                                inner_tr_1.appendChild(inner_td_1);
-                                                
-                                                let inner_td_2 = document.createElement("td");
+                                                        inner_tr_0.appendChild(inner_td);
         
-                                                let inner_h4 = document.createElement("h4");
+                                                        inner_table.appendChild(inner_tr_0);
+                                                        
+                                                        let inner_tr_1 = document.createElement("tr");
+                
+                                                        let inner_td_0 = document.createElement("td");
+                                                        inner_td_0.width = "5%";
+                
+                                                        inner_tr_1.appendChild(inner_td_0);
+                
+                                                        let inner_td_1 = document.createElement("td");
+                                                        inner_td_1.width = "5%";
+                
+                                                        let img = document.createElement("img");
+                                                        img.className = "rounded-circle";
+                                                        img.src = user.imagen == undefined? user.logo : user.imagen;
+                                                        img.height = "30";
+                
+                                                        inner_td_1.appendChild(img);
+                
+                                                        inner_tr_1.appendChild(inner_td_1);
+                                                        
+                                                        let inner_td_2 = document.createElement("td");
+                
+                                                        let inner_h4 = document.createElement("h4");
+                
+                                                        if(user.bazar != undefined) {
+                                                            inner_h4.innerHTML = user.bazar;
+                                                        }
+                                                        else if(user.marca != undefined) {
+                                                            inner_h4.innerHTML = user.marca;
+                                                        }
+                                                        else {
+                                                            inner_h4.innerHTML = user.nombre;
+                                                        }
+                
+                                                        inner_td_2.appendChild(inner_h4);
+                
+                                                        inner_tr_1.appendChild(inner_td_2);
+                
+                                                        inner_table.appendChild(inner_tr_1);
+                
+                                                        let inner_tr_2 = document.createElement("tr");
+                                                        
+                                                        inner_td_1 = document.createElement("td");
+                
+                                                        inner_tr_2.appendChild(inner_td_1);
+                
+                                                        inner_td_1 = document.createElement("td");
+                
+                                                        inner_tr_2.appendChild(inner_td_1);
+                
+                                                        inner_td_2 = document.createElement("td");
+                
+                                                        let p = document.createElement("p");
+                                                        p.innerHTML = doubt.duda;
+                
+                                                        inner_td_2.appendChild(p);
+                
+                                                        let br = document.createElement("br");
+                
+                                                        inner_td_2.appendChild(br);
+                
+                                                        inner_tr_2.appendChild(inner_td_2);
+                
+                                                        inner_table.appendChild(inner_tr_2);
+                
+                                                        td.appendChild(inner_table);
+                
+                                                        tr.appendChild(td);
+                
+                                                        table.appendChild(tr);
         
-                                                if(user.bazar != undefined) {
-                                                    inner_h4.innerHTML = user.bazar;
-                                                }
-                                                else if(user.marca != undefined) {
-                                                    inner_h4.innerHTML = user.marca;
-                                                }
-                                                else {
-                                                    inner_h4.innerHTML = user.nombre;
-                                                }
-        
-                                                inner_td_2.appendChild(inner_h4);
-        
-                                                inner_tr_1.appendChild(inner_td_2);
-        
-                                                inner_table.appendChild(inner_tr_1);
-        
-                                                let inner_tr_2 = document.createElement("tr");
-                                                
-                                                inner_td_1 = document.createElement("td");
-        
-                                                inner_tr_2.appendChild(inner_td_1);
-        
-                                                inner_td_1 = document.createElement("td");
-        
-                                                inner_tr_2.appendChild(inner_td_1);
-        
-                                                inner_td_2 = document.createElement("td");
-        
-                                                let p = document.createElement("p");
-                                                p.innerHTML = doubt.duda;
-        
-                                                inner_td_2.appendChild(p);
-        
-                                                let br = document.createElement("br");
-        
-                                                inner_td_2.appendChild(br);
-        
-                                                inner_tr_2.appendChild(inner_td_2);
-        
-                                                inner_table.appendChild(inner_tr_2);
-        
-                                                td.appendChild(inner_table);
-        
-                                                tr.appendChild(td);
-        
-                                                table.appendChild(tr);
-
-                                                display_dudas.appendChild(table);
-                                            }
+                                                        display_dudas.appendChild(table);
+                                                    }
+                                                };
+                                            } 
                                         };
-                                    } 
-                                };
+                                    }
+                                }
                             }
-                        }
-                    }
-                };
-            } 
-        }
+                        };
+                    } 
+                }
+            }; 
     }; 
+}
+
+function showDoubtModal() {
+    let url_temp = "http://localhost:3000/api/doubt/" + this.id;
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', url_temp);
+    xhr.send();
+    xhr.onload = function () {
+        if (xhr.status != 200) { 
+            alert("Hubo un error intenta más tarde.");
+        } 
+        else { 
+            let doubt = JSON.parse(xhr.response);
+
+            let btn_id = document.getElementById("temp_id");
+            btn_id.id = doubt._id;
+
+            let url_temp = "http://localhost:3000/api/user/" + doubt.usuario_token;
+            xhr = new XMLHttpRequest();
+            xhr.open('GET', url_temp);
+            xhr.send();
+            xhr.onload = function () {
+                if (xhr.status != 200) { 
+                    alert("Hubo un error intenta más tarde.");
+                } 
+                else {
+                    let user = JSON.parse(xhr.response);
+
+                    let inner_table = document.createElement("table");
+                    inner_table.className = "form-control";
+                    inner_table.id = "res_modal";
+                    
+                    let inner_tr_1 = document.createElement("tr");
+
+                    let inner_td_1 = document.createElement("td");
+                    inner_td_1.width = "5%";
+
+                    let img = document.createElement("img");
+                    img.className = "rounded-circle";
+                    img.src = user.imagen == undefined? user.logo : user.imagen;
+                    img.height = "30";
+
+                    inner_td_1.appendChild(img);
+
+                    inner_tr_1.appendChild(inner_td_1);
+                    
+                    let inner_td_2 = document.createElement("td");
+
+                    let inner_h4 = document.createElement("h4");
+                    inner_h4.id = "res_modal_text";
+
+                    if(user.bazar != undefined) {
+                        inner_h4.innerHTML = user.bazar;
+                    }
+                    else if(user.marca != undefined) {
+                        inner_h4.innerHTML = user.marca;
+                    }
+                    else {
+                        inner_h4.innerHTML = user.nombre;
+                    }
+
+                    inner_td_2.appendChild(inner_h4);
+
+                    inner_tr_1.appendChild(inner_td_2);
+
+                    inner_table.appendChild(inner_tr_1);
+
+                    let inner_tr_2 = document.createElement("tr");
+                    
+                    inner_td_1 = document.createElement("td");
+
+                    inner_tr_2.appendChild(inner_td_1);
+
+                    inner_td_2 = document.createElement("td");
+
+                    let p = document.createElement("p");
+                    p.innerHTML = doubt.duda;
+
+                    inner_td_2.appendChild(p);
+
+                    let br = document.createElement("br");
+
+                    inner_td_2.appendChild(br);
+
+                    inner_tr_2.appendChild(inner_td_2);
+        
+                    inner_table.appendChild(inner_tr_2);
+
+                    let response_dis = document.getElementById("response_display");
+                    response_dis.innerHTML = "";
+
+                    response_dis.appendChild(inner_table);
+                }
+            };
+        }
+    };
+}
+
+
+function readResponse(object) {
+    let message = document.getElementById("response_message").value;
+    
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', "http://localhost:3000/api/response");
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({"usuario_token": localStorage.getItem("token"), "response": message, "doubt_id": object.id}));
+    xhr.onload = function () {
+        if (xhr.status != 201) { 
+            console.log("Un parametro esta mal.");
+        } else { 
+            alert("Se ha enviado el mensaje.");
+            displayDudas();
+        }
+    };
 }
