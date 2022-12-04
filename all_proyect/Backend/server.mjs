@@ -1595,6 +1595,11 @@ app.put('/api/producto_foro', (req, res) => {
                 let doubts_ids = docs.dudas;
                 let doubts = [];
 
+                if(doubts_ids.length == 0) {
+                    res.status(200);
+                    res.send(doubts);                                
+                }
+
                 for(let i = 0 ; i < doubts_ids.length ; i++) {
                     Doubt.findById(doubts_ids[i], (err, docs) => {
                         if(err) {
@@ -1719,6 +1724,11 @@ app.put('/api/producto_reviews', (req, res) => {
             else {
                 let reviews_ids = docs.reseñas;
                 let reviews = [];
+
+                if(reviews_ids.length == 0) {
+                    res.status(200);
+                    res.send(reviews);   
+                }
 
                 for(let i = 0 ; i < reviews_ids.length ; i++) {
                     Review.findById(reviews_ids[i], (err, docs) => {
@@ -1916,4 +1926,140 @@ app.delete('/api/carrito', (req, res) => {
             }
         });
     } 
+});
+
+app.put('/api/comprar_producto', (req, res) => {
+    let complete_token = req.body.usuario_token;
+    let product_id = req.body.product_id;
+
+    if(complete_token == undefined || product_id == undefined) {
+        res.sendStatus(400);
+    }
+    else {
+        let id_token, index;
+
+        for(let i = 11 ; complete_token[i] != '-' ; i++) {
+            index = i;
+        }
+
+        id_token = complete_token.substring(11, index + 1);
+
+        let tipo = complete_token.substring(index + 2, complete_token.length);
+        console.log(tipo);
+
+        if(tipo == 'user') {
+            User.findById(id_token, (err, docs) => {
+                if(err) {
+                    console.log("Error: " + err);
+                    res.send(err);
+                }
+                else {
+                    let user = docs;
+
+                    if(user.historial == undefined) {
+                        user.historial = [];
+                    }
+                    
+                    user.historial.push(product_id);
+
+                    let index = user.carrito.findIndex(item => item == product_id);
+
+                    if(index != -1) {
+                        user.carrito.splice(index, 1);
+                    }
+                    else {
+                        console.log("poyo");
+                    }
+
+                    User.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
+                        if(err) {
+                            console.log("Error: " + err);
+                            res.send(err);
+                        }
+                        else {
+                            console.log(chalk.green("Carrito actualizado:"));
+                            console.log(doc);
+                            res.status(200);
+                            res.send(doc);
+                        }
+                    });
+                }
+            });
+        }
+        else if(tipo == 'marca') {
+            Brand.findById(id_token, (err, docs) => {
+                if(err) {
+                    console.log("Error: " + err);
+                    res.send(err);
+                }
+                else {
+                    let user = docs;
+    
+                    if(user.historial == undefined) {
+                        user.historial = [];
+                    }
+
+                    user.historial.push(product_id);
+
+                    let index = user.carrito.findIndex(item => item == product_id);
+
+                    if(index =! -1) {
+                        user.carrito.splice(index, 1);
+                    }
+
+                    Brand.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
+                        if(err) {
+                            console.log("Error: " + err);
+                            res.send(err);
+                        }
+                        else {
+                            console.log(chalk.green("Carrito actualizado:"));
+                            console.log(doc);
+                            res.status(200);
+                            res.send(doc);
+                        }
+                    });
+                }
+            });
+        }
+        else if(tipo == 'bazar') {
+            Bazaar.findById(id_token, (err, docs) => {
+                if(err) {
+                    console.log("Error: " + err);
+                    res.send(err);
+                }
+                else {
+                    let user = docs;
+    
+                    if(user.historial == undefined) {
+                        user.historial = [];
+                    }
+
+                    user.historial.push(product_id);
+
+                    let index = user.carrito.findIndex(item => item == product_id);
+
+                    if(index =! -1) {
+                        user.carrito.splice(index, 1);
+                    }
+
+                    Bazaar.findByIdAndUpdate(user.id, user, {new: true}, (err, doc) => {
+                        if(err) {
+                            console.log("Error: " + err);
+                            res.send(err);
+                        }
+                        else {
+                            console.log(chalk.green("Carrito actualizado:"));
+                            console.log(doc);
+                            res.status(200);
+                            res.send(doc);
+                        }
+                    });
+                }
+            });
+        }
+        else {
+            ServerResponse.sendStatus(400);
+        }
+    }
 });

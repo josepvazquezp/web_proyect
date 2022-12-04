@@ -245,3 +245,11 @@
 #     "usuario_token": "qwertyuiop-638917e6884c4e1237c0d1a2-marca",
 #     "product_id": "63891951884c4e1237c0d1c4"
 # }
+
+# PUT http://localhost:3000/api/comprar_producto HTTP/1.1 
+# content-type: application/json
+
+# {
+#     "usuario_token": "qwertyuiop-637a5abde3f6f33d7a14317f-user",
+#     "product_id": "6388e1452e96ac15c0b0928f"
+# }

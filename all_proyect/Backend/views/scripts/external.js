@@ -632,7 +632,7 @@ function busquedaHome(){
 
                         let td_in_2 = document.createElement("td");
                         td_in_2.align = "right";
-                        td_in_2.innerHTML = '<a name="" id="" class="btn" href="producto" role="button"><img src="' + productos[i].imagen + '" width="200"></a>';
+                        td_in_2.innerHTML = '<a name="" id="' + productos[i]._id + '" class="btn" href="producto" role="button" onclick="setProduct(this);"><img src="' + productos[i].imagen + '" width="200"></a>';
                         tr_temp.appendChild(td_in_2);
 
                         table_temp.appendChild(tr_temp);
@@ -1566,7 +1566,7 @@ function displayDudas() {
                 flag_login = true;
             }
         }   
-
+            
             xhr = new XMLHttpRequest();
             xhr.open('PUT', "http://localhost:3000/api/producto_foro");
             xhr.setRequestHeader('Content-Type', 'application/json');
@@ -1587,6 +1587,29 @@ function displayDudas() {
                     let global_td_1 = document.createElement("td");
         
                     let table = document.createElement("table");
+
+                    if(dudas.length == 0) {
+                        let tr = document.createElement("tr");
+        
+                        let td = document.createElement("td");
+                        
+                        let h4 = document.createElement("h4");
+                        h4.innerHTML = "No hay dudas por el momento.";
+
+                        td.appendChild(h4);
+
+                        tr.appendChild(td);
+
+                        table.appendChild(tr);
+
+                        global_td_1.appendChild(table);
+
+                        global_tr.appendChild(global_td_1);
+
+                        global_table.appendChild(global_tr);
+
+                        display_dudas.appendChild(global_table);
+                    }
         
                     for(let i = 0 ; i < dudas.length ; i++) {
                         let url_temp = "http://localhost:3000/api/user/" + dudas[i].usuario_token;
@@ -1988,6 +2011,29 @@ function displayReviews() {
 
             let table = document.createElement("table");
 
+            if(reviews.length == 0) {
+                let tr = document.createElement("tr");
+
+                let td = document.createElement("td");
+                
+                let h4 = document.createElement("h4");
+                h4.innerHTML = "No hay reseñas por el momento.";
+
+                td.appendChild(h4);
+
+                tr.appendChild(td);
+
+                table.appendChild(tr);
+
+                global_td_2.appendChild(table);
+
+                global_tr.appendChild(global_td_2);
+
+                global_table.appendChild(global_tr);
+
+                display_reviews.appendChild(global_table);
+            }
+
             for(let i = 0 ; i < reviews.length ; i++) {
                 let url_temp = "http://localhost:3000/api/user/" + reviews[i].usuario_token;
                 let xhr = new XMLHttpRequest();
@@ -2098,6 +2144,22 @@ function displayCarrito() {
             let display_carrito = document.getElementById("products_carrito");
             display_carrito.innerHTML = "";
 
+            if(carrito.length == 0) {
+                let tr = document.createElement("tr");
+
+                let td = document.createElement("td");
+
+                let h4 = document.createElement("h4");
+                h4.innerHTML = 'Aún no hay productos en el <i class="fa fa-shopping-cart" aria-hidden="true"></i>';
+
+                td.appendChild(h4);
+
+                tr.appendChild(td);
+
+                display_carrito.appendChild(tr);
+
+            }
+
             for(let i = 0 ; i < carrito.length ; i++) {
                 let xhr = new XMLHttpRequest();
                 xhr.open('PUT', 'http://localhost:3000/api/display_producto');
@@ -2112,7 +2174,7 @@ function displayCarrito() {
 
                         let tr = document.createElement("tr");
 
-                        let td = document.createElement("tr");
+                        let td = document.createElement("td");
 
                         let hr = document.createElement("hr");
                         hr.className = "my-2";
@@ -2146,7 +2208,7 @@ function displayCarrito() {
                         inner_td_2.appendChild(inner_br);
 
                         let in_in_table = document.createElement("table");
-                        in_in_table.width = "70%";
+                        in_in_table.width = "90%";
 
                         let in_in_tr = document.createElement("tr");
 
@@ -2171,6 +2233,19 @@ function displayCarrito() {
                         in_in_td_2.appendChild(in_in_btn);
 
                         in_in_tr.appendChild(in_in_td_2);
+
+                        let in_in_td_3 = document.createElement("td");
+
+                        let in_in_btn_2 = document.createElement("button");
+                        in_in_btn_2.type = "button";
+                        in_in_btn_2.className = "btn btn-success";
+                        in_in_btn_2.id = product._id;
+                        in_in_btn_2.addEventListener("click", comprarUnidad);
+                        in_in_btn_2.innerHTML = '<i class="fa fa-money" aria-hidden="true"></i>';
+
+                        in_in_td_3.appendChild(in_in_btn_2);
+
+                        in_in_tr.appendChild(in_in_td_3);
 
                         in_in_table.appendChild(in_in_tr);
 
@@ -2224,7 +2299,32 @@ function comprarCarrito() {
         } 
         else {
             alert('Productos comprados.');
-            displayCarrito();         
+            displayCarrito();
+               
+            let temp_product = localStorage.getItem("producto_id");
+            displayProducto(temp_product);      
+        }
+    };
+}
+
+function setProduct(object) {
+    localStorage.setItem("producto_id", object.id);
+}
+
+function comprarUnidad() {
+    let xhr = new XMLHttpRequest();
+    xhr.open('PUT', 'http://localhost:3000/api/comprar_producto');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({"usuario_token": localStorage.getItem("token"), "product_id": this.id}));
+    xhr.onload = function () {
+        if (xhr.status != 200) { 
+            alert("Hubo un error intenta más tarde.");
+        } 
+        else {
+            alert('Productos comprado.');
+            displayCarrito();  
+            let temp_product = localStorage.getItem("producto_id");
+            displayProducto(temp_product);       
         }
     };
 }
